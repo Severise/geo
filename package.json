@@ -1,0 +1,25 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "cd backend && nodemon server.js",
+    "client": "cd geo && npm start",
+    "start": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "concurrently": "^5.1.0",
+    "express-session": "^1.17.0",
+    "mysql": "^2.18.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "react-router-dom": "^5.1.2"
+  },
+  "devDependencies": {
+    "md5": "^2.2.1"
+  }
+}
