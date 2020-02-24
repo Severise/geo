@@ -4,9 +4,10 @@ import { BrowserRouter } from 'react-router-dom';
 import Routes from './Routes';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(
-	(<BrowserRouter>
+ReactDOM.render((
+	<BrowserRouter>
 		<Routes />
-	</BrowserRouter>), document.getElementById('root'));
+	</BrowserRouter>
+), document.getElementById('root'));
 
 serviceWorker.unregister();

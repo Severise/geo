@@ -70,7 +70,7 @@ export default class Classes extends Component {
 							{this.state.students.map((stud)=><tr  key={stud.id}>
 								<td>{stud.id}</td>
 								<td className="name" contentEditable="true" suppressContentEditableWarning={true} onClick={this.handleClick} onBlur={this.handleBlur}>{stud.name}</td>
-								<td className="password" contentEditable="true" suppressContentEditableWarning={true} onClick={this.handleClick} onBlur={this.handleBlur}>{stud.password}</td>
+								<td>{stud.password}</td>
 								<td className="class" contentEditable="true" suppressContentEditableWarning={true} onClick={this.handleClick} onBlur={this.handleBlur}>{stud.class}</td>
 							</tr>)}
 							</tbody>

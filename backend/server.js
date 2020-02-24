@@ -1,5 +1,7 @@
 const express = require('express');
 const session = require('express-session');
+const jwt = require('jsonwebtoken')
+
 
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -38,42 +40,64 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 
-var tryUser;
+var user;
 
-function authentication() {
-	return function(req, res, next) {
-		console.log(req.body.user);
-		if (req.isAuthenticated())
-			return next();
-		res.redirect('/login');
-	}
-}
+// function authentication() {
+// 	return function(req, res, next) {
+// 		console.log(req.body.user);
+// 		if (req.isAuthenticated())
+// 			return next();
+// 		res.redirect('/login');
+// 	}
+// }
 
-passport.use(new LocalStrategy({ usernameField: 'login', passwordField: 'password' },
-	function(login, password, done) {
-		console.log("select * from " + role + " where login = '" + login + "' and password='" + md5(password) + "'");
-		db.query("select * from teachers where login = '" + login + "' and password='" + md5(password) + "'", function(err, rows, fields) {
-			if (rows[0]) {
-				if (err)
-					throw err;
-				tryUser = rows[0];
-				return done(null, tryUser);
-			} else
-				return done(null, false);
-		});
-	}
-));
+// passport.use(new LocalStrategy({ usernameField: 'login', passwordField: 'password' },
+// 	function(login, password, done) {
+// 		console.log("select * from " + role + " where login = '" + login + "' and password='" + md5(password) + "'");
+// 		db.query("select * from teachers where login = '" + login + "' and password='" + md5(password) + "'", function(err, rows, fields) {
+// 			if (rows[0]) {
+// 				if (err)
+// 					throw err;
+// 				user = rows[0];
+// 				return done(null, user);
+// 			} else
+// 				return done(null, false);
+// 		});
+// 	}
+// ));  
 
 app.post('/login', (req, res) => {
 	console.log(req.body);
-	passport.authenticate('local', {
-		successRedirect: '/teacher',
-		failureRedirect: '/?auth=false'
-	})
+	var q;
+
+	if (req.body.role === 'teacher')
+		q = req.body.role + "s where login = '" + req.body.login + "' and password='" + md5(req.body.password) + "'";
+	else
+		q = req.body.role + "s where login = '" + req.body.login + "' and password='" + req.body.password + "'";
+	db.query("select * from " + q, function(err, rows, fields) {
+		if (err)
+			res.send(err);
+		else if (!rows[0])
+			res.status(404).send({ 'error': "User not found" });
+		else {
+			user = {
+				id: rows[0].id,
+				name: rows[0].name,
+				login: rows[0].login,
+				school: rows[0].school,
+				class: rows[0].class
+			};
+			var token = jwt.sign(user, 'secret', {
+				expiresIn: 1440
+			});
+			res.send({token:token, user:user});
+		}
+	});
+
 });
 
 
-app.get('/logout', authentication(), (req, res) => {
+app.get('/logout', (req, res) => {
 	req.logout();
 	req.session.destroy();
 	user = null;
@@ -108,7 +132,7 @@ app.get('/classes', (req, res) => {
 
 		}
 	});
-	
+
 });
 
 app.post('/changestudent', (req, res) => {
@@ -128,22 +152,21 @@ app.post('/changestudent', (req, res) => {
 // app.use('/api', router);
 
 
-passport.serializeUser(function(user, done) {
-	console.log('serializeUser');
-	done(null, user.id);
-});
+// passport.serializeUser(function(user, done) {
+// 	console.log('serializeUser');
+// 	done(null, user.id);
+// });
 
-var user;
-passport.deserializeUser(function(id, done) {
-	connection.query("select * from teachers where id = '" + id + "'", function(err, rows, fields) {
-		if (err)
-			throw err;
-		user = { id: rows[0].id, name: rows[0].name, login: rows[0].login };
-		session.login = user.login;
-		session.id = user.id;
-		return done(null, user);
-	});
-});
+// passport.deserializeUser(function(id, done) {
+// 	connection.query("select * from teachers where id = '" + id + "'", function(err, rows, fields) {
+// 		if (err)
+// 			throw err;
+// 		user = { id: rows[0].id, name: rows[0].name, login: rows[0].login };
+// 		session.login = user.login;
+// 		session.id = user.id;
+// 		return done(null, user);
+// 	});
+// });
 
 // launch our backend into a port
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

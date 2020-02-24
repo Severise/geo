@@ -125,6 +125,7 @@ ul {
     float: left;
     background-color: salmon;
     width: 42%;
+    min-height: 380px;
 }
 
 #content h1 {
@@ -178,6 +179,7 @@ tbody tr:nth-child(2n) {
 tr {
     border-bottom: 1px solid #000;
 }
+
 /* 
 td span {
     width: calc(100% - 32px);
@@ -185,14 +187,15 @@ td span {
     padding: 6px 12px 6px 20px;
 }
  */
-td,th {
+td,
+th {
     font-weight: 100;
     padding: 6px 12px 6px 20px;
     text-align: left;
 }
 
-th{
-     padding: 6px 12px 6px 20px;
+th {
+    padding: 6px 12px 6px 20px;
     text-align: left;
 
 }
@@ -220,7 +223,7 @@ tbody tr:hover {
 
 
 #sign>label {
-    margin-bottom: 30px;
+    margin-bottom: 18px;
     display: inline-block;
 }
 
@@ -305,6 +308,12 @@ form label {
     font-size: 16px;
     overflow: hidden;
     font-family: Arial, Helvetica, sans-serif;
+}
+
+.error {
+    margin-bottom: 18px;
+    font-size: 19px;
+    color: #be011c;
 }
 
 form input,
