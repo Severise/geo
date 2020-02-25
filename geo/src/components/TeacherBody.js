@@ -10,12 +10,15 @@ export default class TeacherBody extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			students: []
+			students: [],
+			user:this.props.user
 		}
 		this.handleSubmit = this.handleSubmit.bind(this);
+		console.log(this.state.user)
 	}
 
 	handleSubmit(event) {
+		//send teacher id
 		axios.get(`/classes`)
 			.then(res => {
 				this.setState({ students: res.data });
@@ -28,7 +31,7 @@ export default class TeacherBody extends Component {
 		return (
 			<div id="body">
 				<div id="content">
-					<Link to='/classes' className="button">Просмотреть классы</Link>
+					<Link to={{pathname:'/classes', state:{user:this.state.user}}} className="button" user={this.state.user}>Просмотреть классы</Link>
 					<button onClick={show}>Создать класс</button>
 				</div>
 				<div id="side">

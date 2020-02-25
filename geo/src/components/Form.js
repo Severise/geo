@@ -32,11 +32,12 @@ export default class Sign extends Component {
 			})
 			.then(res => {
 				localStorage.setItem('usertoken', res.data.token)
-
 				if (res && res.data.user.class)
 					this.props.history.push(`/student`)
-				else if (res && res.data.user.school)
-					this.props.history.push(`/teacher`)
+				else if (res && res.data.user.school){
+					this.props.history.push({pathname: `/teacher`,
+						state: { user: res.data.user }});
+				}
 			})
 			.catch(error => {
 				this.setState({
@@ -50,7 +51,7 @@ export default class Sign extends Component {
 			<div id="sign">
 				<label>Введите данные для входа</label>
 				<div className="error">{this.state.loginError}</div>
-				<form  onSubmit={this.handleSubmit} >
+				<form  onSubmit={this.handleSubmit}>
 					<ul>
 						<li><label htmlFor="login">Имя</label>
 							<input type="text" name="login" value={this.state.login} onChange={this.handleChange}/></li>

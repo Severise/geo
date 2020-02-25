@@ -17,9 +17,9 @@ const API_PORT = 3001;
 
 app.use(express.json());
 app.use(session({
-	secret: 'kitty',
-	resave: true,
-	saveUninitialized: true
+    secret: 'kitty',
+    resave: true,
+    saveUninitialized: true
 }));
 
 app.use(passport.initialize());
@@ -28,10 +28,10 @@ app.use(passport.session());
 
 const mysql = require('mysql');
 const db = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: '',
-	database: 'geo'
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'geo'
 });
 
 
@@ -67,85 +67,109 @@ var user;
 // ));  
 
 app.post('/login', (req, res) => {
-	console.log(req.body);
-	var q;
+    console.log(req.body);
+    var q;
 
-	if (req.body.role === 'teacher')
-		q = req.body.role + "s where login = '" + req.body.login + "' and password='" + md5(req.body.password) + "'";
-	else
-		q = req.body.role + "s where login = '" + req.body.login + "' and password='" + req.body.password + "'";
-	db.query("select * from " + q, function(err, rows, fields) {
-		if (err)
-			res.send(err);
-		else if (!rows[0])
-			res.status(404).send({ 'error': "User not found" });
-		else {
-			user = {
-				id: rows[0].id,
-				name: rows[0].name,
-				login: rows[0].login,
-				school: rows[0].school,
-				class: rows[0].class
-			};
-			var token = jwt.sign(user, 'secret', {
-				expiresIn: 1440
-			});
-			res.send({token:token, user:user});
-		}
-	});
+    if (req.body.role === 'teacher')
+        q = req.body.role + "s where login = '" + req.body.login + "' and password='" + md5(req.body.password) + "'";
+    else
+        q = req.body.role + "s where login = '" + req.body.login + "' and password='" + req.body.password + "'";
+    db.query("select * from " + q, function(err, rows, fields) {
+        if (err)
+            res.send(err);
+        else if (!rows[0])
+            res.status(404).send({ 'error': "User not found" });
+        else {
+            user = {
+                id: rows[0].id,
+                name: rows[0].name,
+                login: rows[0].login,
+                school: rows[0].school,
+                class: rows[0].class
+            };
+            var token = jwt.sign(user, 'secret', {
+                expiresIn: 1440
+            });
+            res.send({ token: token, user: user });
+        }
+    });
 
 });
 
 
 app.get('/logout', (req, res) => {
-	req.logout();
-	req.session.destroy();
-	user = null;
-	res.redirect('/menu');
+    req.logout();
+    req.session.destroy();
+    user = null;
+    res.redirect('/menu');
 });
 
 
 
 app.get('/', (req, res) => {
-	console.log('get//');
-	res.send('home');
+    console.log('get//');
+    res.send('home');
 });
 
 
 app.get('/classes', (req, res) => {
-	console.log("select * from students where teacher_id=1")
-	db.query("select * from `students` where `teacher_id`=1", function(err, rows, fields) {
-		if (err)
-			throw err;
-		else {
-			var studs = [];
-			for (var i = 0; i < rows.length; i++)
-				studs.push({
-					id: rows[i].id,
-					name: rows[i].name,
-					password: rows[i].password,
-					class: rows[i].class
-				})
-			// console.log(studs)
+    console.log("")
+    db.query("select students.id as id, students.name as name, students.password as password, classes.number as number, classes.letter as letter  from `students`, `classes` where `teacher_id`=" + req.query.teacherId + " and students.class_id=classes.id", function(err, rows, fields) {
+        if (err)
+            throw err;
+        else {
+            var studs = [];
+            for (var i = 0; i < rows.length; i++)
+                studs.push({
+                    id: rows[i].id,
+                    name: rows[i].name,
+                    password: rows[i].password,
+                    class: rows[i].number + ' ' + rows[i].letter
+                })
+            // console.log(studs)
 
-			res.send(studs);
+            res.send(studs);
 
-		}
-	});
+        }
+    });
 
 });
 
+
+app.post('/regstudents', (req, res) => {
+    console.log(req.body)
+    var studs = req.body.students.split(/,| |;|\r|\n|\./);
+    studs = studs.filter(function(el) {
+        return el != null && el != '';
+    })
+    // var data = [];
+    var q = '';
+    for (var i = 0; i < studs.length; i++) {
+        let pass = generatePassword();
+        // data.push({ name: studs[i], class: req.body.class, password: pass });
+        q += '("' + studs[i] + '", "' + pass + '",' + session.id + ', "' + req.body.class + '" ),';
+        // q += '("' + studs[i] + '", "' + md5(pass) + '",' + session.id + ', "' + req.body.class + '" ),';
+    }
+    db.query("insert into students  (`name`, `password`, `teacher_id`, `class_id`) values " + q.slice(0, -1), function(err, rows, fields) {
+        if (err)
+            throw err;
+        else
+            res.redirect('/teacher');
+    });
+})
+
 app.post('/changestudent', (req, res) => {
-	console.log(req.body);
-	var q = " `" + req.body.attr + "`='" + req.body.value + "' where `id`=" + req.body.id;
-	db.query("update `students` set " + q, function(err, rows, fields) {
-		if (err)
-			throw err;
-		else {
-			console.log(rows);
-			res.send();
-		}
-	});
+    console.log(req.body);
+    var q = " `" + req.body.attr + "`='" + req.body.value + "' where `id`=" + req.body.id;
+    db.query("update `students` set " + q, function(err, rows, fields) {
+        if (err)
+            res.send(400, 'not changed');
+
+        else {
+            // console.log(rows);
+            res.send();
+        }
+    });
 });
 
 // append /api for our http requests

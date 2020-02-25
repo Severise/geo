@@ -3,11 +3,18 @@ import Head from '../components/Head';
 import TeacherBody from '../components/TeacherBody';
 
 export default class Teacher extends Component {
-	render() {
+	
+	constructor(props) {
+		super(props);
+		this.state = {
+		}
+	}
+
+render() {
 		return (
 			<div>
 				<Head />
-				<TeacherBody />
+				<TeacherBody user={this.props.location.state.user}/>
 			</div>
 		);
 	}
