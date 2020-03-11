@@ -111,8 +111,29 @@ app.get('/', (req, res) => {
     res.send('home');
 });
 
-
 app.get('/classes', (req, res) => {
+    console.log("")
+    db.query("select id, number, letter from `classes`", function(err, rows, fields) {
+        if (err)
+            throw err;
+        else {
+            var classes = [];
+            for (var i = 0; i < rows.length; i++)
+                classes.push({
+                    id: rows[i].id,
+                    class: rows[i].number+' '+rows[i].letter
+                })
+            console.log(classes)
+
+            res.send(classes);
+
+        }
+    });
+
+});
+
+
+app.get('/students', (req, res) => {
     console.log("")
     db.query("select students.id as id, students.name as name, students.password as password, classes.number as number, classes.letter as letter  from `students`, `classes` where `teacher_id`=" + req.query.teacherId + " and students.class_id=classes.id", function(err, rows, fields) {
         if (err)

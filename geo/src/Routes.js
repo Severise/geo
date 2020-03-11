@@ -5,7 +5,7 @@ import Teacher from './pages/Teacher';
 import Learn from './pages/Learn';
 import Test from './pages/Test';
 import Student from './pages/Student';
-import Classes from './pages/Classes';
+import Students from './pages/Students';
 import { Switch, Route } from 'react-router-dom';
 import './App.css';
 
@@ -18,7 +18,7 @@ const Routes = () => (
 		<Route exact path='/login' component={Login}></Route>
 		<Route exact path='/teacher' component={Teacher}></Route>
 		<Route exact path='/student' component={Student}></Route>
-		<Route exact path='/classes' component={Classes}></Route>
+		<Route exact path='/students' component={Students}></Route>
 	</Switch>
 );
 export default Routes;
