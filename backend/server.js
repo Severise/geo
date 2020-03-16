@@ -121,7 +121,7 @@ app.get('/classes', (req, res) => {
             for (var i = 0; i < rows.length; i++)
                 classes.push({
                     id: rows[i].id,
-                    class: rows[i].number+' '+rows[i].letter
+                    class: rows[i].number + ' ' + rows[i].letter
                 })
             console.log(classes)
 
@@ -135,7 +135,7 @@ app.get('/classes', (req, res) => {
 
 app.get('/students', (req, res) => {
     console.log("")
-    db.query("select students.id as id, students.name as name, students.password as password, classes.number as number, classes.letter as letter  from `students`, `classes` where `teacher_id`=" + req.query.teacherId + " and students.class_id=classes.id", function(err, rows, fields) {
+    db.query("select students.id as id, students.name as name, students.password as password, classes.number as number, classes.letter as letter, classes.id as classId  from `students`, `classes` where `teacher_id`=" + req.query.teacherId + " and students.class_id=classes.id", function(err, rows, fields) {
         if (err)
             throw err;
         else {
@@ -145,7 +145,9 @@ app.get('/students', (req, res) => {
                     id: rows[i].id,
                     name: rows[i].name,
                     password: rows[i].password,
-                    class: rows[i].number + ' ' + rows[i].letter
+                    class: rows[i].number + ' ' + rows[i].letter,
+                    classId: rows[i].classId,
+
                 })
             // console.log(studs)
 
@@ -181,13 +183,18 @@ app.post('/regstudents', (req, res) => {
 
 app.post('/changestudent', (req, res) => {
     console.log(req.body);
-    var q = " `" + req.body.attr + "`='" + req.body.value + "' where `id`=" + req.body.id;
+
+    var q = '';
+    if (req.body.attr == "class")
+        q = " `class_id`=" + req.body.value + " where `id`=" + req.body.id;
+    else
+        q = " `" + req.body.attr + "`='" + req.body.value + "' where `id`=" + req.body.id;
+    console.log("update `students` set " + q);
     db.query("update `students` set " + q, function(err, rows, fields) {
         if (err)
             res.send(400, 'not changed');
 
         else {
-            // console.log(rows);
             res.send();
         }
     });

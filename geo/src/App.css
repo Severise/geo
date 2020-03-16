@@ -1,11 +1,11 @@
 /* 
 
 *::-moz-selection {
-    background-color: #F7FFCD;
+	background-color: #F7FFCD;
 }
 
 *::selection {
-    background-color: #F7FFCD;
+	background-color: #F7FFCD;
 }
  */
 
@@ -24,7 +24,7 @@ body {
 
 
 /* body>*:not(:first-child) {
-    top: 150px;
+	top: 150px;
 } */
 
 * {
@@ -43,31 +43,31 @@ h1 {
 
 /*
 h2 {
-    font-weight: 100;
-    margin-top: 28px;
-    margin-bottom: 10px;
-    font-size: 1.1em;
+	font-weight: 100;
+	margin-top: 28px;
+	margin-bottom: 10px;
+	font-size: 1.1em;
 }
 
 h3 {
-    font-weight: 100;
-    margin-bottom: 14px;
-    margin-top: 20px;
-    font-size: 1em;
-    width: fit-content;
+	font-weight: 100;
+	margin-bottom: 14px;
+	margin-top: 20px;
+	font-size: 1em;
+	width: fit-content;
 }
 
 h4 {
-    font-weight: 100;
-    margin-bottom: 18px;
-    margin-top: 20px;
-    margin-left: 12px;
-    font-size: 0.8em;
+	font-weight: 100;
+	margin-bottom: 18px;
+	margin-top: 20px;
+	margin-left: 12px;
+	font-size: 0.8em;
 
 }
 
 h5 {
-    font-size: 0.7em;
+	font-size: 0.7em;
 }
  */
 a {
@@ -86,13 +86,13 @@ a {
 }
 
 /*#head *::selection {
-    background-color: transparent;
-    color: inherit;
+	background-color: transparent;
+	color: inherit;
 }
 
 #head *::-moz-selection {
-    background-color: transparent;
-    color: inherit;
+	background-color: transparent;
+	color: inherit;
 } */
 
 #nav {
@@ -180,13 +180,21 @@ tr {
     border-bottom: 1px solid #000;
 }
 
-/* 
-td span {
-    width: calc(100% - 32px);
-    display: inline-block;
-    padding: 6px 12px 6px 20px;
+
+td:nth-child(2) {
+    cursor: pointer;
+    min-width: 90px;
 }
- */
+
+td:nth-child(1) {
+    cursor: pointer;
+    min-width: 32px;
+}
+
+td:nth-child(4) {
+    padding: 0;
+}
+
 td,
 th {
     font-weight: 100;
@@ -250,7 +258,7 @@ form ul {
     margin: 0;
 }
 
-form li {
+form li, #body li {
     display: block;
     padding: 0px;
     border: 1px solid #000;
@@ -297,7 +305,7 @@ form button {
 }
 
 
-form label {
+form label, li label {
     display: block;
     float: left;
     margin-top: -12px;
@@ -318,7 +326,8 @@ form label {
 }
 
 form input,
-form textarea, form select {
+form textarea,
+form select, li select {
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -342,6 +351,10 @@ form textarea {
 
 }
 
+select {
+    font-size: 20px;
+}
+
 a.button,
 button {
     display: inline-block;
@@ -354,3 +367,29 @@ button {
     padding: 9px;
     width: fit-content;
 }
+
+table select {
+    width: 100%;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    height: 100%;
+    font-size: 20px;
+    border: 0;
+    background-color: transparent;
+    padding: 6px 12px 6px 20px;
+    cursor: pointer;
+
+}
+
+table option {
+    width: 100%;
+}
+
+table select::-ms-expand {
+    display: none;
+}
+
+#body li{
+	width: 10%;
+}
+/* fsfsa noooooooooo*/
