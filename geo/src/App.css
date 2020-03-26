@@ -393,3 +393,7 @@ table select::-ms-expand {
 	width: 10%;
 }
 /* fsfsa noooooooooo*/
+
+circle:hover{
+    cursor: pointer;
+}
