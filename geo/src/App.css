@@ -1,11 +1,11 @@
 /* 
 
 *::-moz-selection {
-	background-color: #F7FFCD;
+    background-color: #F7FFCD;
 }
 
 *::selection {
-	background-color: #F7FFCD;
+    background-color: #F7FFCD;
 }
  */
 
@@ -24,7 +24,7 @@ body {
 
 
 /* body>*:not(:first-child) {
-	top: 150px;
+    top: 150px;
 } */
 
 * {
@@ -38,36 +38,37 @@ h1 {
     padding-top: 50px;
     padding-left: 20px;
     padding-right: 20px;
-    /* font-size: 1.5em */
+    font-size: 1.8em
+}
+
+h2 {
+    font-weight: 100;
+    padding-top: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 1.8em;
 }
 
 /*
-h2 {
-	font-weight: 100;
-	margin-top: 28px;
-	margin-bottom: 10px;
-	font-size: 1.1em;
-}
-
 h3 {
-	font-weight: 100;
-	margin-bottom: 14px;
-	margin-top: 20px;
-	font-size: 1em;
-	width: fit-content;
+    font-weight: 100;
+    margin-bottom: 14px;
+    margin-top: 20px;
+    font-size: 1em;
+    width: fit-content;
 }
 
 h4 {
-	font-weight: 100;
-	margin-bottom: 18px;
-	margin-top: 20px;
-	margin-left: 12px;
-	font-size: 0.8em;
+    font-weight: 100;
+    margin-bottom: 18px;
+    margin-top: 20px;
+    margin-left: 12px;
+    font-size: 0.8em;
 
 }
 
 h5 {
-	font-size: 0.7em;
+    font-size: 0.7em;
 }
  */
 a {
@@ -86,13 +87,13 @@ a {
 }
 
 /*#head *::selection {
-	background-color: transparent;
-	color: inherit;
+    background-color: transparent;
+    color: inherit;
 }
 
 #head *::-moz-selection {
-	background-color: transparent;
-	color: inherit;
+    background-color: transparent;
+    color: inherit;
 } */
 
 #nav {
@@ -116,7 +117,7 @@ ul {
 #sign {
     top: 150px;
     position: absolute;
-    width: 100%;
+    width: 90%;
     margin-left: 10%;
 
 }
@@ -128,7 +129,8 @@ ul {
     min-height: 380px;
 }
 
-#content h1 {
+#content h1,
+#content h2 {
     background-color: firebrick;
 }
 
@@ -258,7 +260,8 @@ form ul {
     margin: 0;
 }
 
-form li, #body li {
+form li,
+#body li {
     display: block;
     padding: 0px;
     border: 1px solid #000;
@@ -305,7 +308,8 @@ form button {
 }
 
 
-form label, li label {
+form label,
+li label {
     display: block;
     float: left;
     margin-top: -12px;
@@ -327,7 +331,8 @@ form label, li label {
 
 form input,
 form textarea,
-form select, li select {
+form select,
+li select {
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -378,7 +383,6 @@ table select {
     background-color: transparent;
     padding: 6px 12px 6px 20px;
     cursor: pointer;
-
 }
 
 table option {
@@ -389,11 +393,108 @@ table select::-ms-expand {
     display: none;
 }
 
-#body li{
-	width: 10%;
+#body>li {
+    width: 10%;
 }
+
 /* fsfsa noooooooooo*/
 
-circle:hover{
+circle:hover {
     cursor: pointer;
+}
+
+#layers {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    position: absolute;
+    left: 42%;
+}
+
+#layers li {
+    text-align: center;
+    padding: 10px;
+    margin: 0;
+    cursor: pointer;
+    width: 70px;
+}
+
+svg {}
+
+.chosen {
+    background-color: #467894;
+}
+
+path:hover {
+    stroke-width: 1.5;
+    fill: #cf4977;
+    -webkit-transition: all 0.7s ease;
+    -moz-transition: all 0.7s ease;
+    -ms-transition: all 0.7s ease;
+    -o-transition: all 0.7s ease;
+    transition: all 0.7s ease;
+}
+
+path {
+    fill: #cccccc;
+    stroke: #333333;
+    stroke-width: 0.8;
+    stroke-opacity: 1
+}
+
+#river path {
+    fill: none;
+    stroke: #162d50;
+    stroke-width: 1.9;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+}
+
+#river path:hover {
+    stroke-width: 5.6;
+    stroke: #0a6bff;
+    -webkit-transition: all 0.7s ease;
+    -moz-transition: all 0.7s ease;
+    -ms-transition: all 0.7s ease;
+    -o-transition: all 0.7s ease;
+    transition: all 0.7s ease;
+}
+
+#river [name=angara]:hover {
+    fill: #cc99ff;
+}
+
+/* #d40000 */
+circle {
+    r: 8px;
+    opacity: 1;
+    fill: #3aa737;
+    stroke-width: 0.2
+}
+
+circle[name="birusinsk"],
+circle[name="sayansk"],
+circle[name="svirsk"],
+circle[name="usolesibirskoe"] {
+    fill: #0000fd;
+
+}
+
+circle:hover {
+    fill: #6718fa;
+    stroke-width: 0.2;
+    r: 12px;
+    -webkit-transition: all 0.7s ease;
+    -moz-transition: all 0.7s ease;
+    -ms-transition: all 0.7s ease;
+    -o-transition: all 0.7s ease;
+    transition: all 0.7s ease;
+
+
+}
+
+text {
+    /* display: none; */
+   stroke: 3px;
+   fill: #333333
 }
