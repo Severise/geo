@@ -1,24 +1,42 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import * as jwt_decode from 'jwt-decode';
 
-import { authenticationService } from '@/_services';
+const PrivateRoute = ({component: Component, ...rest}) => (
+	<Route {...rest} render={props => {
+		console.log(props)
+		console.log(props.location)
 
-export const PrivateRoute = ({ component: Component, roles, ...rest }) => (
-    <Route {...rest} render={props => {
-        const currentUser = authenticationService.currentUserValue;
-        if (!currentUser) {
-            // not logged in so redirect to login page with the return url
-            return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-        }
+		if (!localStorage.token && !props.location.state) {
+			return <Redirect to={{
+					pathname: '/login'
+				}} />
+		}
 
-        // check if route is restricted by role
-        if (roles && roles.indexOf(currentUser.role) === -1) {
-            // role not authorised so redirect to home page
-            return <Redirect to={{ pathname: '/'}} />
-        }
-
-        // authorised so return component
-        return <Component {...props} />
-    }
-} />
+		var user = props.location.state && props.location.state.user ? props.location.state.user : jwt_decode(localStorage.token);
+		props.location.state={user: user};
+		if (user.school) {
+			if (props.location.pathname === '/teacher' || props.location.pathname === '/students'|| props.location.pathname === '/results') {
+				return <Component {...props}/>
+			}
+			return <Redirect to={{
+					pathname: '/teacher',
+					state: {
+						user: user
+					}
+				}} />
+		}
+		if (user.class) {
+			if (props.location.pathname === '/student') {
+				return <Component {...props} />
+			}
+			return <Redirect to={{
+					pathname: '/student',
+					state: {
+						user: user
+					}
+				}} />
+		}
+	}}/>
 )
+export default PrivateRoute;

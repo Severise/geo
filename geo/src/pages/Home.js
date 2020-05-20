@@ -1,14 +1,25 @@
 import React, { Component } from 'react';
-import Head from '../components/Head';
-import Main from '../components/Main';
+import { Link } from 'react-router-dom'
+
 
 export default class Home extends Component {
 	render() {
 		return (
-			<div>
-				<Head />
-				<Main />
+			<div id="body">
+				<div id="content">
+					<h1>О проекте</h1>
+					<div>Данное приложение создано для изучения географии Иркутской области. Здесь можно изучить области, города, реки и природные места. Обучение и проверка доступна любым желающим, а учителя могут зарегистрировать себя и свой класс и проверять знания учеников.
+					</div>
+				</div>
+				<div id="side">
+					<div>
+					<h3>Учителям</h3>
+					Если вы учитель, вы можете зарегистрироваться <Link to='/login'>здесь</Link> или войти <Link to='/login'>здесь</Link>. На странице профиля вы сможете добавить свой класс.</div>
+					<div>
+					<h3>Ученикам</h3>
+					Если вы ученик, то вы можете войти <Link to='/login'>здесь</Link>. На своей странице вы сможете увидеть результаты своих тестов.</div>
+				</div>
 			</div>
-		);
+			);
 	}
 }

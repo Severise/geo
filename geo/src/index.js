@@ -2,12 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import Routes from './Routes';
+import Head from './components/Head.js'
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render((
 	<BrowserRouter>
-		<Routes />
+		<Head/>
+		<Routes/>
 	</BrowserRouter>
-), document.getElementById('root'));
+	), document.getElementById('root'));
 
 serviceWorker.unregister();
