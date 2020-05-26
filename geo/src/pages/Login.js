@@ -9,9 +9,10 @@ export default class Sign extends Component {
 			login: "",
 			password: "",
 			role: "teacher",
-			loginError: ""
+			school: "",
+			name: "",
+			loginError: "",
 		};
-
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
@@ -24,19 +25,21 @@ export default class Sign extends Component {
 
 	handleSubmit(event) {
 		event.preventDefault();
-		if (this.state.role === '') {
-			this.setState({
-				loginError: "Выберите роль"
-			});
-			return;
+		var radio = document.getElementsByName('form');
+		for (var i = 0; i < radio.length; i++) {
+			if (radio[i].checked) {
+				var path = radio[i].id;
+				console.log(radio[i])
+				console.log(radio[i].id)
+			}
 		}
-		axios
-			.post("login", {
+
+		if (path === "signin") {
+			axios.post(path, {
 				login: this.state.login,
 				password: this.state.password,
 				role: this.state.role
-			})
-			.then(res => {
+			}).then(res => {
 				localStorage.setItem('token', res.data);
 				var token = jwt_decode(res.data);
 				if (token.class) {
@@ -54,25 +57,56 @@ export default class Sign extends Component {
 						}
 					});
 				}
-			})
-			.catch(error => {
+			}).catch(error => {
 				this.setState({
-					loginError: "User not found"
+					loginError: <div className="error">User not found</div>
 				});
 			});
+		} else {
+			axios.post(path, {
+				name: this.state.name,
+				login: this.state.login,
+				password: this.state.password,
+				school: this.state.school
+			}).then(res => {
+				if (res.data.newUser) {
+					this.setState({
+						loginError: <div className="success">Success registration</div>
+					});
+
+					this.setState({
+						name: "",
+						login: "",
+						password: "",
+						school: "",
+					});
+					document.getElementById('signin').checked = true;
+				} else {
+					this.setState({
+						loginError: <div className="error">Пользователь уже существует</div>
+					});
+				}
+			}).catch(error => {
+				this.setState({
+					loginError: <div className="error">Registration error</div>
+				});
+			});
+
+
+		}
 	}
 
 	render() {
 		return (
 			<div id="form">
-                    <input type="radio" id="signform" name="form" value="" defaultChecked />
-                    <label htmlFor="signform">Вход</label>
+                    <input type="radio" id="signin" name="form" value="" defaultChecked />
+                    <label htmlFor="signin">Вход</label>
                     <div id="sign">
                         <label>Введите данные для входа</label>
-                        <div className="error">{this.state.loginError}</div>
+                        {this.state.loginError}
                         <form onSubmit={this.handleSubmit}>
                             <ul>
-                                <li><label htmlFor="login">Имя</label>
+                                <li><label htmlFor="login">Логин</label>
                                     <input type="text" name="login" value={this.state.login} onChange={this.handleChange} /></li>
                                 <li><label htmlFor="password">Пароль</label>
                                     <input type="password" name="password" value={this.state.password} onChange={this.handleChange}/></li>
@@ -88,16 +122,16 @@ export default class Sign extends Component {
                         </form>
                     </div>  
                     <label> / </label>
-                    <input type="radio" id="regform" name="form" value=""/>
-                    <label htmlFor="regform">Регистрация</label>
+                    <input type="radio" id="signup" name="form" value=""/>
+                    <label htmlFor="signup">Регистрация</label>
                 <div id="reg">
                     <label>Введите данные</label>
-                    <div className="error">{this.state.loginError}</div>
+                    {this.state.loginError}
                     <form  onSubmit={this.handleSubmit}>
                         <ul>
                             <li><label htmlFor="name">Имя</label>
-                                <input type="text" name="lo gin" value={this.state.name} onChange={this.handleChange}/></li> 
-                            <li><label htmlFor="login">Имя</label>
+                                <input type="text" name="name" value={this.state.name} onChange={this.handleChange}/></li> 
+                            <li><label htmlFor="login">Логин</label>
                                 <input type="text" name="login" value={this.state.login} onChange={this.handleChange}/></li>
                             <li><label htmlFor="password">Пароль</label>
                                 <input type="password" name="password" value={this.state.password} onChange={this.handleChange}/></li>

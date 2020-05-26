@@ -10,19 +10,7 @@ export default class Teacher extends Component {
 			user: this.props.location.state.user,
 			classes: [],
 			students: '',
-			data: [{
-				name: "dds",
-				password: 'dsad'
-			}, {
-				name: "dd22s",
-				password: 'dsad'
-			}, {
-				name: "dd42s",
-				password: 'dsad'
-			}, {
-				name: "dd232s",
-				password: 'dsad'
-			}],
+			data: [],
 			letter: '',
 			number: '',
 			class: '',
@@ -33,7 +21,8 @@ export default class Teacher extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleCreate = this.handleCreate.bind(this);
 		this.handleChange = this.handleChange.bind(this);
-		this.handleClick = this.showLast.bind(this);
+		this.select = this.select.bind(this);
+		this.showLast = this.showLast.bind(this);
 
 		axios.get(`/classes`)
 			.then(res => {
@@ -59,11 +48,15 @@ export default class Teacher extends Component {
 					data: res.data
 				});
 				this.setState({
+					status: 'Добавлено ' + res.data.length + ' учеников:'
+				}, show);
+				this.setState({
 					students: '',
 					classValue: '',
 					class: ''
 				});
-				console.log(this.state)
+
+
 			}).catch(error => {
 			console.log(error);
 		});
@@ -77,12 +70,13 @@ export default class Teacher extends Component {
 		})
 			.then(res => {
 				this.setState({
-					status: 'Создан класс:' + res.data.number + ' ' + res.data.letter
-				});
+					status: 'Создан класс: ' + res.data.number + ' ' + res.data.letter
+				}, show);
 				this.setState({
 					letter: '',
 					number: ''
 				});
+
 			}).catch(error => {
 			this.setState({
 				status: ''
@@ -115,25 +109,34 @@ export default class Teacher extends Component {
 			console.log(error);
 		});
 	}
+	select(event) {
+		this.setState({
+			status: '',
+			data: []
+		}, show(event))
+	}
 	render() {
 		return (
 			<div id="body">
 				<div id="content">
-					<button className="class" onClick={show}>Создать класс</button>
-					<button className="stud" onClick={show}>Создать учеников</button>
-					<Link to={{
+					<h3>Функции</h3>
+					<div>
+						<button className="class" onClick={this.select}>Создать класс</button>
+						<button className="stud" onClick={this.select}>Создать учеников</button>
+						<button className="stud" onClick={this.showLast}>Показать последние результаты</button>
+						<Link to={{
 				pathname: '/students',
 				state: {
 					user: this.state.user
 				}
 			}} className="button" user={this.state.user}>Просмотреть класы</Link>
-							<button className="stud" onClick={this.showLast}>Показать последние результаты</button>
-							<Link to={{
+						<Link to={{
 				pathname: '/results',
 				state: {
 					user: this.state.user
 				}
 			}} className="button" user={this.state.user}>Просмотреть результаты</Link>
+					</div>
 					{this.state.last.length > 0 ? (<table>
 							<thead>
 								<tr>
@@ -144,7 +147,7 @@ export default class Teacher extends Component {
 								</tr>
 							</thead>
 							<tbody>
-								{this.state.last.map((item) => <tr key={item.name}>
+								{this.state.last.map((item) => <tr key={item.id}>
 									<td>{item.name}</td>
 									<td>{item.class}</td>
 									<td>{item.type}</td>
@@ -156,9 +159,23 @@ export default class Teacher extends Component {
 		 		</div>
 				<div id="side">
 					<span className="success">{this.state.status}</span>
-					<form id="stud" style={{
-				display: 'none'
-			}} onSubmit={this.handleSubmit}>
+					{this.state.data.length > 0 ? (<table>
+						<thead>
+							<tr>
+								<th>name</th>
+								<th>password</th>
+								<th>class</th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.state.data.map((stud) => <tr key={stud.id}>
+								<td>{stud.name}</td>
+								<td>{stud.password}</td>
+								<td>{stud.class}</td>
+							</tr>)}
+						</tbody>
+					</table>) : ('')}
+					<form id="stud" onSubmit={this.handleSubmit}>
 						<ul>
 							<li>
 								<label htmlFor="letter">Класс</label>
@@ -174,9 +191,7 @@ export default class Teacher extends Component {
 							<li><button type="submit">Создать</button></li>
 						</ul>
 					</form>
-						<form id="class" style={{
-				display: 'none'
-			}} onSubmit={this.handleCreate}>
+						<form id="class" onSubmit={this.handleCreate}>
 						<ul>
 							<li>
 								<label htmlFor="number">Номер класса</label>
@@ -189,23 +204,6 @@ export default class Teacher extends Component {
 							<li><button type="submit">Создать</button></li>
 						</ul>
 					</form>
-					{this.state.data.length > 0 ? (<table>
-							<thead>
-								<tr>
-									<th>name</th>
-									<th>password</th>
-									<th>class</th>
-								</tr>
-							</thead>
-							<tbody>
-								{this.state.data.map((stud) => <tr key={stud.name}>
-									<td>{stud.name}</td>
-									<td>{stud.password}</td>
-									<td>{stud.class}</td>
-								</tr>)}
-							</tbody>
-						</table>
-				) : ('')}
 				</div>
 			</div>
 			);

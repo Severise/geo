@@ -10,7 +10,6 @@ import { Switch, Route } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import './App.css';
 
-
 const Routes = () => (
 	<Switch>
 		<Route exact path='/' component={Home}></Route>

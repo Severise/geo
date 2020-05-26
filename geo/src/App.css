@@ -20,11 +20,25 @@ body::-webkit-scrollbar {
 	width: 0px;
 }
 
+#map::-webkit-scrollbar {
+	width: 4px;
+	height: 4px;
+	background-color: transparent
+}
+
+#map::-webkit-scrollbar-thumb {
+	background-color: #FFCD32;
+}
+
+#map::-webkit-scrollbar-corner {
+	background-color: transparent
+}
+
 body {
 	font-size: 22px;
 	margin: 0;
 	font-family: 'Play', sans-serif;
-	color: #222;
+	color: #710527;
 }
 
 * {
@@ -41,6 +55,7 @@ h1 {
 	padding: 40px 40px 0;
 	font-size: 1.8em;
 	line-height: initial;
+	color: #0B4747;
 }
 
 h2 {
@@ -50,23 +65,27 @@ h2 {
 	padding-right: 20px;
 	font-size: 1.8em;
 	line-height: initial;
+	color: #0B4747;
 }
 
 h3 {
 	font-weight: 100;
-	margin-bottom: 14px;
+	padding-top: 40px;
+	padding-left: 20px;
+	padding-right: 20px;
+	color: #0B4747;
+	font-size: 1.3em;
 	line-height: initial;
 }
 
-/*
 h4 {
 	font-weight: 100;
-	margin-bottom: 18px;
-	margin-top: 20px;
-	margin-left: 12px;
-	font-size: 0.8em;
+	margin-bottom: 14px;
+	line-height: initial;
+	font-size: 1.17em;
 }
 
+/*
 h5 {
 	font-size: 0.7em;
 }
@@ -75,12 +94,15 @@ a {
 	width: min-content;
 	outline: none;
 	text-decoration: none;
+	color: #710527;
 }
+
+a:active {}
 
 #head {
 	height: 68px;
 	width: 100%;
-	background-color: tomato;
+	background-color: #2BDBDB;
 	position: absolute;
 	top: 0;
 	padding-top: 38px;
@@ -106,7 +128,13 @@ a {
 	margin-right: 70px;
 }
 
-#nav ul a {}
+#nav ul a {
+	color: #97113C;
+}
+
+#nav ul a:hover {
+	color: #F5306F;
+}
 
 ul {
 	margin: 0;
@@ -119,6 +147,15 @@ ul {
 	position: absolute;
 	width: 100%;
 	/* margin-left: 8%; */
+
+}
+
+a {
+	color: #F5306F;
+}
+
+a:hover {
+	color: #036868;
 
 }
 
@@ -140,14 +177,18 @@ ul {
 #content {
 	margin-left: 8%;
 	float: left;
-	background-color: salmon;
+	background-color: #C0F8F8;
 	width: 50%;
 	min-height: 380px;
 }
 
 #content h1,
 #content h2 {
-	background-color: firebrick;
+	background-color: #FFCD32;
+}
+
+#content h3 {
+	background-color: #2BDBDB;
 }
 
 #content>div {
@@ -156,7 +197,14 @@ ul {
 	height: 300px;
 	font-size: 22px;
 	line-height: 32px;
+}
 
+
+#content #map {
+	overflow: auto;
+	min-height: 760px;
+	margin: 0;
+	padding: 10px
 }
 
 #side {
@@ -164,17 +212,19 @@ ul {
 	width: 26%;
 	float: left;
 	margin-left: 8%;
+	min-width: 380px;
 }
 
 #side>div {
-	background-color: salmon;
+	background-color: #FFE184;
 	width: calc(100% - 60px);
 	min-height: 170px;
 	margin-bottom: 50px;
 	padding: 20px 30px;
 }
 
-#side form {
+#stud,
+#class {
 	display: none;
 }
 
@@ -183,8 +233,6 @@ button:focus,
 a.button:focus {
 	outline: none;
 }
-
-
 
 table {
 	border-collapse: collapse;
@@ -200,17 +248,19 @@ tbody tr:nth-child(2n) {
 }
 
 tr {
-	border-bottom: 1px solid #000;
+	border-bottom: 1px solid #97113C;
 }
 
 
 td:nth-child(2) {
-	cursor: pointer;
 	min-width: 90px;
 }
 
-td:nth-child(1) {
+td[contenteditable="true"] {
 	cursor: pointer;
+}
+
+td:nth-child(1) {
 	min-width: 32px;
 }
 
@@ -236,7 +286,7 @@ thead tr {
 }
 
 tbody tr:hover {
-	background-color: #9cc5d9;
+	background-color: #FD83AA;
 }
 
 #form [type=radio] {
@@ -271,7 +321,7 @@ form li,
 #body li {
 	display: block;
 	padding: 0px;
-	border: 1px solid #000;
+	border: 1px solid #97113C;
 	margin-bottom: 30px;
 	width: 100%;
 }
@@ -292,8 +342,8 @@ form li,
 }
 
 #form [type="radio"]:checked+label {
-	color: #000;
-	border-bottom: 1px solid black;
+	color: #97113C;
+	border-bottom: 1px solid #97113C;
 	display: inline-block;
 }
 
@@ -321,7 +371,7 @@ form li,
 
 #form .radio>[type="radio"]+label:nth-child(4) {
 	cursor: default;
-	color: #000;
+	color: #97113C;
 }
 
 
@@ -362,7 +412,7 @@ li label {
 	float: left;
 	margin-top: -16px;
 	margin-left: 9px;
-	background: #FFFFFF;
+	background: #fff;
 	height: 14px;
 	padding: 2px 5px 2px 5px;
 	font-size: 16px;
@@ -373,7 +423,15 @@ li label {
 .error {
 	margin-bottom: 18px;
 	font-size: 19px;
-	color: #be011c;
+	color: #F5306F;
+}
+
+
+.success {
+	margin-bottom: 18px;
+	font-size: 19px;
+	color: #036868;
+	display: block;
 }
 
 form input,
@@ -400,25 +458,48 @@ form textarea {
 	font-size: 14px;
 	line-height: 20px;
 	margin-top: 12px;
-
 }
 
 select {
 	font-size: 20px;
+	color: #710527;
+	cursor: pointer;
+}
+
+option {
+	width: 110%;
 }
 
 a.button,
 button {
-	display: inline-block;
-	border: 1px solid #000;
+	display: block;
+	border: 1px solid #97113C;
 	font-size: 16px;
 	background-color: #fff;
 	text-align: center;
 	cursor: pointer;
-	color: #000;
-	padding: 9px;
+	color: #710527;
 	width: fit-content;
 	line-height: 27px;
+	width: 36%;
+	padding: 9px;
+	min-width: 260px;
+}
+
+a.button {
+	width: calc(36% - 20px);
+	min-width: calc(260px - 20px);
+
+}
+
+a.button:hover,
+button:hover {
+	background-color: #FDC5D7;
+}
+
+a.button:active,
+button:active {
+	background-color: #C0F8F8;
 }
 
 table select {
@@ -451,6 +532,14 @@ table select::-ms-expand {
 	width: 100%;
 }
 
+#layers *::selection {
+	background-color: transparent;
+}
+
+label::selection {
+	background-color: transparent;
+}
+
 #layers li {
 	line-height: 60px;
 	text-align: center;
@@ -460,14 +549,13 @@ table select::-ms-expand {
 	width: 25%;
 }
 
-/* fsf */
 .chosen {
-	background-color: #467894;
+	background-color: #FFCD32;
 }
 
 .active path:hover {
 	stroke-width: 1.5;
-	fill: #cf4977;
+	fill: #80F8F8;
 	-webkit-transition: all 0.7s ease;
 	-moz-transition: all 0.7s ease;
 	-ms-transition: all 0.7s ease;
@@ -476,8 +564,8 @@ table select::-ms-expand {
 }
 
 path {
-	fill: #cccccc;
-	stroke: #464646;
+	fill: #FFF1C6;
+	stroke: #FFCD32;
 	stroke-width: 0.7;
 	stroke-opacity: 1
 }
@@ -489,7 +577,7 @@ circle {
 
 #river path {
 	fill: none;
-	stroke: #162d50;
+	stroke: #2BDBDB;
 	stroke-width: 1.8;
 	stroke-linecap: butt;
 	stroke-linejoin: miter;
@@ -497,7 +585,6 @@ circle {
 
 .active#river path:hover {
 	stroke-width: 4.6;
-	stroke: #0a6bff;
 	-webkit-transition: all 0.7s ease;
 	-moz-transition: all 0.7s ease;
 	-ms-transition: all 0.7s ease;
@@ -507,24 +594,21 @@ circle {
 
 #river [name=angara],
 #river [name="baikal"] {
-	fill: #1155ff;
+	fill: #80F8F8;
 
 }
 
 .active#river [name=angara]:hover,
-.active#river [name="baikal"]:hover {
-	fill: #cc99ff;
-}
+.active#river [name="baikal"]:hover {}
 
 circle {
-	r: 8px;
+	r: 7px;
 	opacity: 1;
-	fill: #8bf8ff;
+	fill: #FFCD32;
 	stroke-width: 0.2
 }
 
 .active circle:hover {
-	fill: #6718fa;
 	stroke-width: 0.2;
 	r: 12px;
 	-webkit-transition: all 0.7s ease;
@@ -534,24 +618,26 @@ circle {
 	transition: all 0.7s ease;
 }
 
-/* ,mbmsf */
-text {
-	display: none;
-}
 
 .wrong {
-	fill: #990000;
+	fill: #F5306F;
 }
 
-.right {
-	fill: #009900;
+.right,
+path.right:hover {
+	fill: #81F430;
 }
 
 #river .wrong {
-	stroke: #990000;
+	stroke: #F5306F;
 }
 
 #river .right {
-	stroke: #009900;
+	stroke: #81F430;
 	stroke-width: 1.4;
+}
+
+#results ul li {
+	border: 0px;
+	margin: 10px 0;
 }

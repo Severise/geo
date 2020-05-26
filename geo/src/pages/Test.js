@@ -2,35 +2,37 @@ import React, { Component } from 'react';
 import { ReactComponent as Map } from '../components/Map.svg';
 import list from '../components/list.json';
 import _ from 'lodash';
+import axios from 'axios';
 
 export default class Learn extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			user: this.props.location.state.user,
 			current: {},
 			data: _.cloneDeep(list['region']),
 			results: {
 				name: '',
 				res: [],
 				sum: 0
-			}
+			},
+			error: ''
 		};
+		console.log(this.state.user)
+		console.log(!this.state.user)
+		console.log(this.state.user.id)
+		console.log(!this.state.user.id)
 		this.map = React.createRef();
 		this.handleClick = this.handleClick.bind(this);
 		this.handleChoose = this.handleChoose.bind(this);
 		this.handleStart = this.handleStart.bind(this);
+		this.saveResults = this.saveResults.bind(this);
 	}
 
 	handleStart() {
 		var i;
 		var min = 0;
 		var max = 1;
-		// this.setState({
-		// 	results: {
-		// 		name: q,
-		// 		res: []
-		// 	}
-		// });
 
 		if (this.state.data.length < 1) {
 			i = -1;
@@ -38,9 +40,7 @@ export default class Learn extends Component {
 				current: {
 					name: ""
 				}
-			},
-				this.count
-			);
+			}, this.count);
 		} else {
 			min = this.state.data[0].id;
 			max = this.state.data.length + min;
@@ -53,13 +53,6 @@ export default class Learn extends Component {
 					try: 0
 				}
 			});
-			// this.setState({ results:{name: name,  res: this.state.results.res.concat([this.state.current]) } });
-
-			// this.setState({
-			// 	data: this.state.data.splice(i, 1)
-			// }, function function_name(argument) {
-			// 	console.log(this.state.data)
-			// });
 			this.state.data.splice(i, 1)
 		}
 
@@ -67,12 +60,7 @@ export default class Learn extends Component {
 
 
 	handleClick(event) {
-		console.log(this.state.results)
 		var layer = event.target.parentElement.getAttribute("id");
-		//console.log(event.target.getAttribute('name'))
-		//console.log(event.target.getAttribute('id'))
-		//console.log(event.target.parentElement.getAttribute("id"));
-		//console.log(document.getElementsByClassName("chosen")[0].getAttribute("class").split(" ")[0]);
 		if (!this.state.current.id) {
 			return
 		}
@@ -98,7 +86,8 @@ export default class Learn extends Component {
 			this.setState({
 				results: {
 					name: name,
-					res: this.state.results.res.concat([this.state.current])
+					res: this.state.results.res.concat([this.state.current]),
+					sum: this.state.results.sum
 				}
 			}, this.handleStart());
 		}
@@ -111,7 +100,8 @@ export default class Learn extends Component {
 		this.setState({
 			results: {
 				name: '',
-				res: []
+				res: [],
+				sum: 0
 			}
 		})
 		if (document.getElementsByClassName("chosen")[0]) {
@@ -140,8 +130,7 @@ export default class Learn extends Component {
 		clone = clone[cur];
 		this.setState({
 			data: clone
-		},
-			this.handleStart);
+		}, this.handleStart);
 	}
 
 
@@ -150,27 +139,45 @@ export default class Learn extends Component {
 		var item;
 		var sum = 0;
 		for (var i = 0; i < res.length; i++) {
-			item = 1. - (0.25 * res[i].try);
-			console.log(item)
+			item = 1. - (res[i].try / 3);
 			item = item > 0 ? item : 0;
-			console.log(item)
 			item = (100. / res.length) * item;
 			sum += item;
 		}
+
 		this.setState({
 			results: {
 				name: this.state.results.name,
 				res: this.state.results.res,
-				sum: sum
+				sum: Math.round(sum)
 			}
+		}, this.saveResults);
+	}
+	saveResults() {
+
+		if (!this.state.user.id) {
+			return;
+		}
+		axios.post('saveresults', {
+			results: this.state.results,
+			id: this.state.user.id
+		}).then(res => {
+			// console.log(res.data);
+		}).catch(error => {
+			//resend????
+			this.setState({
+				error: 'Ошибка сервера, пройдите тест еще раз'
+			});
 		});
 	}
 	render() {
 		return (
 			<div id="body">
 				<div id="content">
-				<h2>Иркутская область</h2>
-					<Map  ref={this.map} onClick={this.handleClick} />
+					<h2 onClick={this.saveResults}>Иркутская область</h2>
+					<div id="map">
+						<Map  ref={this.map} onClick={this.handleClick} />
+					</div>
 				</div>
 				<div id="side">
 					<ul id="layers">
@@ -180,21 +187,23 @@ export default class Learn extends Component {
 						<li className="place" onClick={this.handleChoose}>Места</li>
 					</ul>
 					<div>
-						{this.state.current.id == null ? (<div>Выберите слой<div>Ваш результат был сохранен, вы набрали {this.state.results.sum}%</div> </div> ) :
-				(<div>Найдите заданный объект: <br/>
+						{this.state.current.id == null ? (<div>Выберите слой</div> ) : (<div>Найдите заданный объект: <br/>
 								<span>{this.state.current.name}</span><br/>
 								Попыток: {this.state.current.try}</div>)}
-						
+								{this.state.results.sum > 0 && this.state.user.id ? (<div>Ваш результат был сохранен, вы набрали {this.state.results.sum}%</div> ) : ('')}
+								{!this.state.user.id && this.state.results.sum > 0 ? (<div>Вы набрали {this.state.results.sum}%</div>) : ('')}
 					</div>	
-					<div>
-					<ul><li>Пещера Охотничья (1)</li><li>Озеро Шара-Нур (1)</li><li>Патомский кратер (0)</li><li>Агульское озеро (0)</li><li>Заповедник Витимский (3)</li><li>Озеро Орон (0)</li><li>Шаман-камень (0)</li><li>Мыс Хобой (0)</li><li>Источник Талая (1)</li><li>Ледники Кодара (0)</li><li>Пик Черского (0)</li><li>Пещеры Тажеранских степей (1)</li><li>Нижнеудинские пещеры (0)</li><li>Результат: 86.53846153846155</li></ul>
-						<ul>
-							{this.state.results.res.map((item) => <li key={item.id}>{item.name} ({item.try})</li>)}	
-							<li>Результат: {this.state.results.sum}%</li>
-						</ul>	
-					</div>	
+
 				</div>
 			</div>
 			);
 	}
 }
+
+// <div id="results">
+// 					<ul><li>Пещера Охотничья (1)</li><li>Озеро Шара-Нур (1)</li><li>Патомский кратер (0)</li><li>Агульское озеро (0)</li><li>Заповедник Витимский (3)</li><li>Озеро Орон (0)</li><li>Шаман-камень (0)</li><li>Мыс Хобой (0)</li><li>Источник Талая (1)</li><li>Ледники Кодара (0)</li><li>Пик Черского (0)</li><li>Пещеры Тажеранских степей (1)</li><li>Нижнеудинские пещеры (0)</li><li>Результат: 86.53846153846155</li></ul>
+// 						<ul>
+// 							{this.state.results.res.map((item) => <li key={item.id}>{item.name} ({item.try})</li>)}	
+// 							<li>Результат: {this.state.results.sum}%</li>
+// 						</ul>	
+// 					</div>

@@ -38,14 +38,14 @@ app.use(morgan('dev'));
 
 var user;
 
-app.post('/login', (req, res) => {
+app.post('/signin', (req, res) => {
 	var q;
 	if (req.body.role === 'teacher') {
 		q = "`" + req.body.role + "s` where login = '" + req.body.login + "' and password='" + md5(req.body.password) + "'";
 	} else {
 		q = "`" + req.body.role + "s`, `classes`  where name = '" + req.body.login + "' and password='" + req.body.password + "' and classes.id=class_id";
 	}
-	console.log(q)
+	console.log("select * from " + q)
 	db.query("select * from " + q, function(err, rows, fields) {
 		if (err) {
 			res.send(err);
@@ -54,7 +54,6 @@ app.post('/login', (req, res) => {
 				'error': "User not found"
 			});
 		} else {
-			console.log(rows[0])
 			user = {
 				id: rows[0].id,
 				name: rows[0].name,
@@ -65,12 +64,41 @@ app.post('/login', (req, res) => {
 			var token = jwt.sign(user, 'geography', {
 				expiresIn: 10000
 			});
-			console.log(token)
 			res.send(token);
 		}
 	});
 
 });
+
+app.post('/signup', (req, res) => {
+	db.query("select * from teachers where login='" + req.body.login + "' and password='" + md5(req.body.password) + "'", function(error, rowss, fieldss) {
+		if (error) {
+			res.send(error);
+		} else {
+			if (rowss.length > 1) {
+				db.query("insert into teachers (`name`, `login`, `password`, `school`) values ('" + req.body.name + "', '" + req.body.login + "', '" + md5(req.body.password) + "', '" + req.body.school + "')", function(err, rows, fields) {
+					if (err) {
+						res.send(err);
+					} else {
+						var newUser = {
+							name: req.body.name,
+							login: req.body.login,
+							school: req.body.school
+						};
+						res.send(newUser);
+					}
+				});
+			} else {
+				res.status(301).send({
+					'error': "User already exists"
+				});
+			}
+		}
+	});
+
+});
+
+
 
 
 
@@ -90,7 +118,6 @@ app.get('/classes', (req, res) => {
 			res.send(classes);
 		}
 	});
-
 });
 
 
@@ -99,7 +126,6 @@ app.get('/students', (req, res) => {
 		if (err) {
 			res.send(err);
 		} else {
-			console.log(rows)
 			var studs = [];
 			for (var i = 0; i < rows.length; i++) {
 				studs.push({
@@ -119,8 +145,6 @@ app.get('/students', (req, res) => {
 
 
 app.post('/regstudents', (req, res) => {
-	console.log('reg')
-	console.log(req.body)
 	var studs = req.body.students.split(/,| |;|\r|\n|\./);
 	studs = studs.filter(function(el) {
 		return el != null && el != '';
@@ -130,6 +154,7 @@ app.post('/regstudents', (req, res) => {
 	for (var i = 0; i < studs.length; i++) {
 		let pass = generatePassword();
 		data.push({
+			id: i,
 			name: studs[i],
 			class: req.body.class,
 			password: pass,
@@ -138,7 +163,6 @@ app.post('/regstudents', (req, res) => {
 		q += '("' + studs[i] + '", "' + pass + '",' + req.body.id + ', "' + req.body.class + '" ),';
 	// q += '("' + studs[i] + '", "' + md5(pass) + '",' + session.id + ', "' + req.body.class + '" ),';
 	}
-	console.log("insert into students (`name`, `password`, `teacher_id`, `class_id`) values " + q.slice(0, -1))
 	db.query("insert into students (`name`, `password`, `teacher_id`, `class_id`) values " + q.slice(0, -1), function(err, rows, fields) {
 		if (err) {
 			res.send(err);
@@ -178,6 +202,29 @@ app.post('/changestudent', (req, res) => {
 		}
 	});
 });
+
+app.post('/saveresults', (req, res) => {
+
+	console.log(req.body)
+	console.log("insert into results (`student_id`, `type`, `result`) values (" + req.body.id + ", '" + req.body.results.name + "', '" + req.body.results.sum + "')")
+	var date = new Date();
+	var o = date.getTimezoneOffset();
+	console.log(o)
+	console.log(date.toGMTString())
+	console.log(date.toUTCString())
+// db.query("insert into results (`student_id`, `type`, `result`) values (" + req.body.id + ", '" + req.body.results.name + "', '" + req.body.results.sum + "')", function(err, rows, fields) {
+// 	if (err) {
+// 		res.send(err);
+// 	} else {
+// 		var result = {
+// 			id: req.body.id,
+// 			type: req.body.results.name,
+// 			res: req.body.results.sum
+// 		};
+// 		res.send(result);
+// 	}
+// });
+})
 
 // append /api for our http requests
 // app.use('/api', router);

@@ -128,15 +128,13 @@ export default class Classes extends Component {
 				<table>
 						<thead>
 							<tr>
-								<th>id</th>
-								<th>name</th>
-								<th>password</th>
-								<th>class</th>
+								<th>Имя</th>
+								<th>Пароль</th>
+								<th>Класс</th>
 							</tr>
 						</thead>
 						<tbody>
 							{this.state.showStudents.map((stud) => <tr  key={stud.id}>
-								<td>{stud.id}</td>
 								<td className="name" contentEditable="true" suppressContentEditableWarning={true} onClick={this.handleClick} onBlur={this.handleBlur}>{stud.name}</td>
 								<td>{stud.password}</td>
 								<td>
@@ -150,16 +148,14 @@ export default class Classes extends Component {
 				<table>
 						<thead>
 							<tr>
-								<th>id</th>
-								<th>name</th>
-								<th>class</th>
-								<th>testType</th>
-								<th>result</th>
+								<th>Имя</th>
+								<th>Класс</th>
+								<th>Вид теста</th>
+								<th>Результат</th>
 							</tr>
 						</thead>
 						<tbody>
 							{this.state.showStudents.map((stud) => <tr  key={stud.id}>
-								<td>{stud.id}</td>
 								<td>{stud.name}</td>
 								<td>{stud.class}</td>
 								<td>{stud.type}</td>

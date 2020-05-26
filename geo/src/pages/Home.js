@@ -3,6 +3,11 @@ import { Link } from 'react-router-dom'
 
 
 export default class Home extends Component {
+	constructor(props) {
+		super(props);
+		console.log(this)
+
+	}
 	render() {
 		return (
 			<div id="body">
@@ -13,10 +18,10 @@ export default class Home extends Component {
 				</div>
 				<div id="side">
 					<div>
-					<h3>Учителям</h3>
+					<h4>Учителям</h4>
 					Если вы учитель, вы можете зарегистрироваться <Link to='/login'>здесь</Link> или войти <Link to='/login'>здесь</Link>. На странице профиля вы сможете добавить свой класс.</div>
 					<div>
-					<h3>Ученикам</h3>
+					<h4>Ученикам</h4>
 					Если вы ученик, то вы можете войти <Link to='/login'>здесь</Link>. На своей странице вы сможете увидеть результаты своих тестов.</div>
 				</div>
 			</div>

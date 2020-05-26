@@ -4,8 +4,6 @@ import * as jwt_decode from 'jwt-decode';
 
 const PrivateRoute = ({component: Component, ...rest}) => (
 	<Route {...rest} render={props => {
-		console.log(props)
-		console.log(props.location)
 
 		if (!localStorage.token && !props.location.state) {
 			return <Redirect to={{
