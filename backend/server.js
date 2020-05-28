@@ -21,7 +21,6 @@ app.use(session({
 	saveUninitialized: true
 }));
 
-
 const mysql = require('mysql');
 const db = mysql.createConnection({
 	host: 'localhost',
@@ -36,7 +35,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-var user;
 
 app.post('/signin', (req, res) => {
 	var q;
@@ -45,7 +43,6 @@ app.post('/signin', (req, res) => {
 	} else {
 		q = "`" + req.body.role + "s`, `classes`  where name = '" + req.body.login + "' and password='" + req.body.password + "' and classes.id=class_id";
 	}
-	console.log("select * from " + q)
 	db.query("select * from " + q, function(err, rows, fields) {
 		if (err) {
 			res.send(err);
@@ -54,7 +51,7 @@ app.post('/signin', (req, res) => {
 				'error': "User not found"
 			});
 		} else {
-			user = {
+			var user = {
 				id: rows[0].id,
 				name: rows[0].name,
 				login: rows[0].login,
@@ -67,8 +64,8 @@ app.post('/signin', (req, res) => {
 			res.send(token);
 		}
 	});
-
 });
+
 
 app.post('/signup', (req, res) => {
 	db.query("select * from teachers where login='" + req.body.login + "' and password='" + md5(req.body.password) + "'", function(error, rowss, fieldss) {
@@ -89,18 +86,13 @@ app.post('/signup', (req, res) => {
 					}
 				});
 			} else {
-				res.status(301).send({
+				res.status(304).send({
 					'error': "User already exists"
 				});
 			}
 		}
 	});
-
 });
-
-
-
-
 
 
 app.get('/classes', (req, res) => {
@@ -122,7 +114,7 @@ app.get('/classes', (req, res) => {
 
 
 app.get('/students', (req, res) => {
-	db.query("select students.id as id, students.name as name, students.password as password, classes.number as number, classes.letter as letter, classes.id as classId  from `students`, `classes` where `teacher_id`=" + req.query.id + " and students.class_id=classes.id", function(err, rows, fields) {
+	db.query("select students.id as id, students.name as name, students.password as password, classes.number as number, classes.letter as letter, classes.id as classId from `students`, `classes` where `teacher_id`=" + req.query.id + " and students.class_id=classes.id", function(err, rows, fields) {
 		if (err) {
 			res.send(err);
 		} else {
@@ -134,13 +126,33 @@ app.get('/students', (req, res) => {
 					password: rows[i].password,
 					class: rows[i].number + ' ' + rows[i].letter,
 					classId: rows[i].classId,
-
 				})
 			}
 			res.send(studs);
 		}
 	});
+});
 
+
+app.get('/results', (req, res) => {
+	db.query("select results.id as id, students.name as name, results.type as type, results.result as result, classes.number as number, classes.letter as letter, classes.id as classId from `students`, `classes`, `results` where `teacher_id`=" + req.query.id + " and students.class_id=classes.id and results.student_id=students.id order by id desc limit 8", function(err, rows, fields) {
+		if (err) {
+			res.send(err);
+		} else {
+			var results = [];
+			for (var i = 0; i < rows.length; i++) {
+				results.push({
+					id: rows[i].id,
+					name: rows[i].name,
+					type: rows[i].type,
+					class: rows[i].number + ' ' + rows[i].letter,
+					classId: rows[i].classId,
+					result: rows[i].result
+				})
+			}
+			res.send(results);
+		}
+	});
 });
 
 
@@ -171,6 +183,7 @@ app.post('/regstudents', (req, res) => {
 		}
 	});
 });
+
 
 app.post('/createClass', (req, res) => {
 	db.query("insert into classes (`number`, `letter`) values (" + req.body.number + ", '" + req.body.letter + "')", function(err, rows, fields) {
@@ -203,33 +216,35 @@ app.post('/changestudent', (req, res) => {
 	});
 });
 
-app.post('/saveresults', (req, res) => {
 
-	console.log(req.body)
-	console.log("insert into results (`student_id`, `type`, `result`) values (" + req.body.id + ", '" + req.body.results.name + "', '" + req.body.results.sum + "')")
-	var date = new Date();
-	var o = date.getTimezoneOffset();
-	console.log(o)
-	console.log(date.toGMTString())
-	console.log(date.toUTCString())
-// db.query("insert into results (`student_id`, `type`, `result`) values (" + req.body.id + ", '" + req.body.results.name + "', '" + req.body.results.sum + "')", function(err, rows, fields) {
-// 	if (err) {
-// 		res.send(err);
-// 	} else {
-// 		var result = {
-// 			id: req.body.id,
-// 			type: req.body.results.name,
-// 			res: req.body.results.sum
-// 		};
-// 		res.send(result);
-// 	}
-// });
+app.post('/saveresults', (req, res) => {
+	db.query("select * from `results` where student_id=" + req.body.id + " and type='" + req.body.results.name + "'", function(error, rowss, fields) {
+		if (error) {
+			res.send(error);
+		} else {
+			if (rowss.length < 1) {
+				db.query("insert into results (`student_id`, `type`, `result`) values (" + req.body.id + ", '" + req.body.results.name + "', '" + req.body.results.sum + "')", function(err, rows, fields) {
+					if (err) {
+						res.send(err);
+					} else {
+						var result = {
+							id: req.body.id,
+							type: req.body.results.name,
+							res: req.body.results.sum
+						};
+						res.send(result);
+					}
+				});
+			} else {
+				res.status(304).send({
+					'error': "Test has already been passed"
+				});
+			}
+		}
+	});
 })
 
 // append /api for our http requests
 // app.use('/api', router);
 
-
-
-// launch our backend into a port
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

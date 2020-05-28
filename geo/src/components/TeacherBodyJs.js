@@ -2,8 +2,8 @@
 export default function show(event) {
 
 
-	document.getElementById("stud").style.display = "none";
-	document.getElementById("class").style.display = "none";
+	document.getElementById("createStud").style.display = "none";
+	document.getElementById("createClass").style.display = "none";
 	if (!event) {
 		return;
 	}

@@ -2,13 +2,21 @@ import React, { Component } from 'react';
 import { ReactComponent as Map } from '../components/Map.svg';
 import list from '../components/list.json';
 import _ from 'lodash';
+import Head from '../components/Head.js'
 
 export default class Learn extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			current: {},
-			data: _.cloneDeep(list['region'])
+			data: [],
+
+			results: {
+				name: '',
+				res: [],
+				sum: 0
+			},
+			status: ''
 		};
 		this.map = React.createRef();
 		this.handleClick = this.handleClick.bind(this);
@@ -36,43 +44,25 @@ export default class Learn extends Component {
 			this.setState({
 				current: {
 					id: this.state.data[i].id,
-					name: this.state.data[i].name,
-					try: 0
+					name: this.state.data[i].name
 				}
-			});
-			this.state.data.splice(i, 1)
+			}, () => document.getElementById(this.state.current.id).classList.add("right"));
+			this.state.data.splice(i, 1);
 		}
-
 	}
 
 
 	handleClick(event) {
 		var layer = event.target.parentElement.getAttribute("id");
-		//console.log(event.target.getAttribute('name'))
-		//console.log(event.target.getAttribute('id'))
-		//console.log(event.target.parentElement.getAttribute("id"));
-		//console.log(document.getElementsByClassName("chosen")[0].getAttribute("class").split(" ")[0]);
 		if (!this.state.current.id) {
 			return
 		}
 		if (layer !== document.getElementsByClassName("chosen")[0].getAttribute("class").split(" ")[0]) {
 			return;
 		}
-		if (parseInt(event.target.getAttribute("id")) !== this.state.current.id) {
-			if (!event.target.classList.contains("right")) {
-				this.setState({
-					current: {
-						id: this.state.current.id,
-						name: this.state.current.name,
-						try: this.state.current.try + 1
-					}
-				});
-			}
-			event.target.classList.add('wrong');
-			return;
-		} else {
-			event.target.classList.remove('wrong');
-			event.target.classList.add('right');
+		if (parseInt(event.target.getAttribute("id")) === this.state.current.id) {
+			event.target.classList.remove('right');
+			this.handleStart();
 		}
 	}
 
@@ -85,16 +75,12 @@ export default class Learn extends Component {
 			if (event.target.classList.contains(prev.getAttribute("class").split(" ")[0])) {
 				return;
 			}
-			prev.classList.remove("chosen");
-			prev = prev.getAttribute("class").split(" ")[0];
-			var a = document.getElementsByClassName("wrong");
 			var b = document.getElementsByClassName("right");
-			for (var i = a.length - 1; i >= 0; i--) {
-				a[i].classList.remove('wrong');
-			}
 			for (var j = b.length - 1; j >= 0; j--) {
 				b[j].classList.remove('right');
 			}
+			prev.classList.remove("chosen");
+			prev = prev.getAttribute("class").split(" ")[0];
 			document.getElementById(prev).style.display = "none";
 		}
 		document.getElementById("region").style.display = "inline";
@@ -113,26 +99,28 @@ export default class Learn extends Component {
 
 	render() {
 		return (
-			<div id="body">
-				<div id="content">
-				<h2>Иркутская область</h2>
-					<Map  ref={this.map} onClick={this.handleClick} />
-				</div>
-				<div id="side">
-					<ul id="layers">
-						<li className="region" onClick={this.handleChoose}>Районы</li>
-						<li className="city" onClick={this.handleChoose}>Города</li>
-						<li className="river" onClick={this.handleChoose}>Реки</li>
-						<li className="place" onClick={this.handleChoose}>Места</li>
-					</ul>
-					<div>
-						{this.state.current.id == null ? (<div>Выберите слой</div> ) :
-				(<div>Найдите заданный объект: <br/>
-								<span>{this.state.current.name}</span><br/>
-								Попыток: {this.state.current.try}</div>)}	
-						
-					</div>	
-					
+			<div>
+				<Head/>
+				<div id="body">
+					<div id="content">
+					<h2>Иркутская область</h2>
+						<div id="map">
+							<Map  ref={this.map} onClick={this.handleClick} />
+						</div>
+					</div>
+					<div id="side">
+						<ul id="layers">
+							<li className="region" onClick={this.handleChoose}>Районы</li>
+							<li className="city" onClick={this.handleChoose}>Города</li>
+							<li className="river" onClick={this.handleChoose}>Реки</li>
+							<li className="place" onClick={this.handleChoose}>Места</li>
+						</ul>
+						<div>
+							{this.state.current.id == null ? (<div>Выберите слой</div> ) : (<div>Запомните название и расположение: {this.state.current.name}<br/><br/>
+								Для продолжения нажмите на заданное место на карте.</div>)}
+								{this.state.status}
+						</div>	
+					</div>
 				</div>
 			</div>
 			);

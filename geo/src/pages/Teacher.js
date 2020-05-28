@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import show from '../components/TeacherBodyJs.js';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Head from '../components/Head.js'
 
 export default class Teacher extends Component {
 	constructor(props) {
@@ -23,7 +23,11 @@ export default class Teacher extends Component {
 		this.handleChange = this.handleChange.bind(this);
 		this.select = this.select.bind(this);
 		this.showLast = this.showLast.bind(this);
+		this.loadClasses = this.loadClasses.bind(this);
+		this.loadClasses();
+	}
 
+	loadClasses() {
 		axios.get(`/classes`)
 			.then(res => {
 				this.setState({
@@ -32,6 +36,7 @@ export default class Teacher extends Component {
 			}).catch(error => {
 			console.log(error);
 		});
+
 	}
 
 	handleSubmit(event) {
@@ -49,7 +54,7 @@ export default class Teacher extends Component {
 				});
 				this.setState({
 					status: 'Добавлено ' + res.data.length + ' учеников:'
-				}, show);
+				}, this.show);
 				this.setState({
 					students: '',
 					classValue: '',
@@ -71,11 +76,11 @@ export default class Teacher extends Component {
 			.then(res => {
 				this.setState({
 					status: 'Создан класс: ' + res.data.number + ' ' + res.data.letter
-				}, show);
+				}, this.show);
 				this.setState({
 					letter: '',
 					number: ''
-				});
+				}, this.loadClasses);
 
 			}).catch(error => {
 			this.setState({
@@ -100,12 +105,16 @@ export default class Teacher extends Component {
 	}
 	showLast(event) {
 		console.log('last')
-		axios.get(`/results`)
-			.then(res => {
-				this.setState({
-					last: res.data
-				});
-			}).catch(error => {
+		axios.get(`/results`, {
+			params: {
+				id: this.state.user.id
+			}
+		}).then(res => {
+			console.log(res.data);
+			this.setState({
+				last: res.data
+			});
+		}).catch(error => {
 			console.log(error);
 		});
 	}
@@ -113,97 +122,117 @@ export default class Teacher extends Component {
 		this.setState({
 			status: '',
 			data: []
-		}, show(event))
+		}, this.show(event))
+	}
+
+	show(event) {
+		if (!event) {
+			document.getElementById("createStud").style.display = "none";
+			document.getElementById("createClass").style.display = "none";
+			return;
+		}
+		var x = document.getElementById(event.target.className);
+		var w = event.target.className === "createClass" ? "createStud" : "createClass";
+		if (x.style.display === "none" || x.style.display === "") {
+			x.style.display = "block";
+			document.getElementById(w).style.display = "none";
+		} else {
+			document.getElementById("createClass").style.display = "none";
+
+		}
 	}
 	render() {
 		return (
-			<div id="body">
-				<div id="content">
-					<h3>Функции</h3>
-					<div>
-						<button className="class" onClick={this.select}>Создать класс</button>
-						<button className="stud" onClick={this.select}>Создать учеников</button>
-						<button className="stud" onClick={this.showLast}>Показать последние результаты</button>
-						<Link to={{
+			<div>
+				<Head/>
+				<div id="body">
+					<div id="content">
+						<h3>{this.state.user.name} {this.state.user.school}</h3>
+						<div>
+							<button className="createClass" onClick={this.select}>Создать класс</button>
+							<button className="createStud" onClick={this.select}>Создать учеников</button>
+							<button onClick={this.showLast}>Показать последние результаты</button>
+							<Link to={{
 				pathname: '/students',
 				state: {
 					user: this.state.user
 				}
-			}} className="button" user={this.state.user}>Просмотреть класы</Link>
-						<Link to={{
+			}} className="button" user={this.state.user}>Просмотреть классы</Link>
+							<Link to={{
 				pathname: '/results',
 				state: {
 					user: this.state.user
 				}
 			}} className="button" user={this.state.user}>Просмотреть результаты</Link>
-					</div>
-					{this.state.last.length > 0 ? (<table>
+						</div>
+						{this.state.last.length > 0 ? (<table>
+								<thead>
+									<tr>
+										<th>name</th>
+										<th>class</th>
+										<th>type</th>
+										<th>result</th>
+									</tr>
+								</thead>
+								<tbody>
+									{this.state.last.map((item) => <tr key={item.id}>
+										<td>{item.name}</td>
+										<td>{item.class}</td>
+										<td>{item.type}</td>
+										<td>{item.result}</td>
+									</tr>)}
+								</tbody>
+							</table>
+				) : ('')}
+			 		</div>
+					<div id="side">
+						<span className="success">{this.state.status}</span>
+						{this.state.data.length > 0 ? (<table>
 							<thead>
 								<tr>
 									<th>name</th>
+									<th>password</th>
 									<th>class</th>
-									<th>type</th>
-									<th>result</th>
 								</tr>
 							</thead>
 							<tbody>
-								{this.state.last.map((item) => <tr key={item.id}>
-									<td>{item.name}</td>
-									<td>{item.class}</td>
-									<td>{item.type}</td>
-									<td>{item.result}</td>
+								{this.state.data.map((stud) => <tr key={stud.id}>
+									<td>{stud.name}</td>
+									<td>{stud.password}</td>
+									<td>{stud.class}</td>
 								</tr>)}
 							</tbody>
-						</table>
-				) : ('')}
-		 		</div>
-				<div id="side">
-					<span className="success">{this.state.status}</span>
-					{this.state.data.length > 0 ? (<table>
-						<thead>
-							<tr>
-								<th>name</th>
-								<th>password</th>
-								<th>class</th>
-							</tr>
-						</thead>
-						<tbody>
-							{this.state.data.map((stud) => <tr key={stud.id}>
-								<td>{stud.name}</td>
-								<td>{stud.password}</td>
-								<td>{stud.class}</td>
-							</tr>)}
-						</tbody>
-					</table>) : ('')}
-					<form id="stud" onSubmit={this.handleSubmit}>
-						<ul>
-							<li>
-								<label htmlFor="letter">Класс</label>
-								<select name="class" onChange={this.handleChange} >
-								<option value=""></option>
-									{this.state.classes.map(item => <option key={item.id} >{item.class}</option>)};
-								</select>
-							</li>
-							<li>
-								<label htmlFor="students">Список студентов</label>
-								<textarea name="students" cols="30" rows="10" value={this.state.students} onChange={this.handleChange} ></textarea>
-							</li>
-							<li><button type="submit">Создать</button></li>
-						</ul>
-					</form>
-						<form id="class" onSubmit={this.handleCreate}>
-						<ul>
-							<li>
-								<label htmlFor="number">Номер класса</label>
-								<input type="number" name="number" value={this.state.number} onChange={this.handleChange} />
+						</table>) : ('')}
+						<form id="createStud" onSubmit={this.handleSubmit}>
+							<ul>
+								<li>
+									<label htmlFor="letter">Класс</label>
+									<select name="class" onChange={this.handleChange} >
+									<option value=""></option>
+										{this.state.classes.map(item => <option key={item.id} >{item.class}</option>)};
+									</select>
 								</li>
-							<li>
-								<label htmlFor="letter">Буква</label>
-								<input type="text" name="letter" value={this.state.letter} onChange={this.handleChange} />
-							</li>
-							<li><button type="submit">Создать</button></li>
-						</ul>
-					</form>
+								<li>
+									<label htmlFor="students">Список студентов</label>
+									<textarea name="students" cols="30" rows="10" value={this.state.students} onChange={this.handleChange} ></textarea>
+								</li>
+								<li><button type="submit">Создать</button></li>
+							</ul>
+						</form>
+							<form id="createClass" onSubmit={this.handleCreate}>
+							<ul>
+								<li>
+									<label htmlFor="number">Номер класса</label>
+									<input type="number" name="number" value={this.state.number} onChange={this.handleChange} />
+									</li>
+								<li>
+									<label htmlFor="letter">Буква</label>
+									<input type="text" name="letter" value={this.state.letter} onChange={this.handleChange} />
+								</li>
+								<li><button type="submit">Создать</button></li>
+							</ul>
+						</form>
+					</div>
 				</div>
 			</div>
 			);

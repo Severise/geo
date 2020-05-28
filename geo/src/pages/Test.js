@@ -3,6 +3,7 @@ import { ReactComponent as Map } from '../components/Map.svg';
 import list from '../components/list.json';
 import _ from 'lodash';
 import axios from 'axios';
+import Head from '../components/Head.js'
 
 export default class Learn extends Component {
 	constructor(props) {
@@ -10,18 +11,14 @@ export default class Learn extends Component {
 		this.state = {
 			user: this.props.location.state.user,
 			current: {},
-			data: _.cloneDeep(list['region']),
+			data: [],
 			results: {
 				name: '',
 				res: [],
 				sum: 0
 			},
-			error: ''
+			status: ''
 		};
-		console.log(this.state.user)
-		console.log(!this.state.user)
-		console.log(this.state.user.id)
-		console.log(!this.state.user.id)
 		this.map = React.createRef();
 		this.handleClick = this.handleClick.bind(this);
 		this.handleChoose = this.handleChoose.bind(this);
@@ -55,15 +52,14 @@ export default class Learn extends Component {
 			});
 			this.state.data.splice(i, 1)
 		}
-
 	}
 
 
 	handleClick(event) {
-		var layer = event.target.parentElement.getAttribute("id");
 		if (!this.state.current.id) {
 			return
 		}
+		var layer = event.target.parentElement.getAttribute("id");
 		if (layer !== document.getElementsByClassName("chosen")[0].getAttribute("class").split(" ")[0]) {
 			return;
 		}
@@ -82,6 +78,10 @@ export default class Learn extends Component {
 		} else {
 			event.target.classList.remove('wrong');
 			event.target.classList.add('right');
+			var a = document.getElementsByClassName("wrong");
+			for (var i = a.length - 1; i >= 0; i--) {
+				a[i].classList.remove('wrong');
+			}
 			var name = document.getElementsByClassName("chosen")[0].getAttribute("class").split(" ")[0];
 			this.setState({
 				results: {
@@ -89,12 +89,14 @@ export default class Learn extends Component {
 					res: this.state.results.res.concat([this.state.current]),
 					sum: this.state.results.sum
 				}
-			}, this.handleStart());
+			}, this.handleStart);
 		}
 	}
 
-
 	handleChoose(event) {
+		this.setState({
+			status: ''
+		});
 		var cur = event.target.className;
 		var prev;
 		this.setState({
@@ -133,7 +135,6 @@ export default class Learn extends Component {
 		}, this.handleStart);
 	}
 
-
 	count() {
 		var res = this.state.results.res;
 		var item;
@@ -153,8 +154,8 @@ export default class Learn extends Component {
 			}
 		}, this.saveResults);
 	}
-	saveResults() {
 
+	saveResults() {
 		if (!this.state.user.id) {
 			return;
 		}
@@ -162,48 +163,50 @@ export default class Learn extends Component {
 			results: this.state.results,
 			id: this.state.user.id
 		}).then(res => {
-			// console.log(res.data);
-		}).catch(error => {
-			//resend????
+
 			this.setState({
-				error: 'Ошибка сервера, пройдите тест еще раз'
+				status: <div>Ваш результат был сохранен, Вы набрали {this.state.results.sum}%</div>
 			});
+		}).catch(error => {
+			if (error.response.status === 304) {
+				this.setState({
+					status: <div>Тест уже пройден, результат не был сохранен, Вы набрали {this.state.results.sum}%</div>
+				});
+			} else {
+				this.setState({
+					status: 'Ошибка, попробуйте пройти еще раз'
+				});
+			}
 		});
 	}
+
 	render() {
 		return (
-			<div id="body">
-				<div id="content">
-					<h2 onClick={this.saveResults}>Иркутская область</h2>
-					<div id="map">
-						<Map  ref={this.map} onClick={this.handleClick} />
+			<div>
+				<Head/>
+				<div id="body">
+					<div id="content">
+						<h2 onClick={this.saveResults}>Иркутская область</h2>
+						<div id="map">
+							<Map  ref={this.map} onClick={this.handleClick} />
+						</div>
 					</div>
-				</div>
-				<div id="side">
-					<ul id="layers">
-						<li className="region" onClick={this.handleChoose}>Районы</li>
-						<li className="city" onClick={this.handleChoose}>Города</li>
-						<li className="river" onClick={this.handleChoose}>Реки</li>
-						<li className="place" onClick={this.handleChoose}>Места</li>
-					</ul>
-					<div>
-						{this.state.current.id == null ? (<div>Выберите слой</div> ) : (<div>Найдите заданный объект: <br/>
-								<span>{this.state.current.name}</span><br/>
-								Попыток: {this.state.current.try}</div>)}
-								{this.state.results.sum > 0 && this.state.user.id ? (<div>Ваш результат был сохранен, вы набрали {this.state.results.sum}%</div> ) : ('')}
-								{!this.state.user.id && this.state.results.sum > 0 ? (<div>Вы набрали {this.state.results.sum}%</div>) : ('')}
-					</div>	
-
+					<div id="side">
+						<ul id="layers">
+							<li className="region" onClick={this.handleChoose}>Районы</li>
+							<li className="city" onClick={this.handleChoose}>Города</li>
+							<li className="river" onClick={this.handleChoose}>Реки</li>
+							<li className="place" onClick={this.handleChoose}>Места</li>
+						</ul>
+						<div>
+							{this.state.current.id == null ? (<div>Выберите слой</div> ) : (<div>Найдите заданный объект: <br/>
+									<span>{this.state.current.name}</span><br/>
+									Попыток: {this.state.current.try}</div>)}
+									{this.state.status}
+						</div>	
+					</div>
 				</div>
 			</div>
 			);
 	}
 }
-
-// <div id="results">
-// 					<ul><li>Пещера Охотничья (1)</li><li>Озеро Шара-Нур (1)</li><li>Патомский кратер (0)</li><li>Агульское озеро (0)</li><li>Заповедник Витимский (3)</li><li>Озеро Орон (0)</li><li>Шаман-камень (0)</li><li>Мыс Хобой (0)</li><li>Источник Талая (1)</li><li>Ледники Кодара (0)</li><li>Пик Черского (0)</li><li>Пещеры Тажеранских степей (1)</li><li>Нижнеудинские пещеры (0)</li><li>Результат: 86.53846153846155</li></ul>
-// 						<ul>
-// 							{this.state.results.res.map((item) => <li key={item.id}>{item.name} ({item.try})</li>)}	
-// 							<li>Результат: {this.state.results.sum}%</li>
-// 						</ul>	
-// 					</div>

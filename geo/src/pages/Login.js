@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import * as jwt_decode from 'jwt-decode';
+import Head from '../components/Head.js'
 
 export default class Sign extends Component {
 	constructor(props) {
@@ -11,7 +12,7 @@ export default class Sign extends Component {
 			role: "teacher",
 			school: "",
 			name: "",
-			loginError: "",
+			status: "",
 		};
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -29,8 +30,6 @@ export default class Sign extends Component {
 		for (var i = 0; i < radio.length; i++) {
 			if (radio[i].checked) {
 				var path = radio[i].id;
-				console.log(radio[i])
-				console.log(radio[i].id)
 			}
 		}
 
@@ -59,7 +58,7 @@ export default class Sign extends Component {
 				}
 			}).catch(error => {
 				this.setState({
-					loginError: <div className="error">User not found</div>
+					status: <div className="error">User not found</div>
 				});
 			});
 		} else {
@@ -71,7 +70,7 @@ export default class Sign extends Component {
 			}).then(res => {
 				if (res.data.newUser) {
 					this.setState({
-						loginError: <div className="success">Success registration</div>
+						status: <div className="success">Success registration</div>
 					});
 
 					this.setState({
@@ -83,66 +82,67 @@ export default class Sign extends Component {
 					document.getElementById('signin').checked = true;
 				} else {
 					this.setState({
-						loginError: <div className="error">Пользователь уже существует</div>
+						status: <div className="error">Пользователь уже существует</div>
 					});
 				}
 			}).catch(error => {
 				this.setState({
-					loginError: <div className="error">Registration error</div>
+					status: <div className="error">Registration error</div>
 				});
 			});
-
-
 		}
 	}
 
 	render() {
 		return (
-			<div id="form">
-                    <input type="radio" id="signin" name="form" value="" defaultChecked />
-                    <label htmlFor="signin">Вход</label>
-                    <div id="sign">
-                        <label>Введите данные для входа</label>
-                        {this.state.loginError}
-                        <form onSubmit={this.handleSubmit}>
-                            <ul>
-                                <li><label htmlFor="login">Логин</label>
-                                    <input type="text" name="login" value={this.state.login} onChange={this.handleChange} /></li>
-                                <li><label htmlFor="password">Пароль</label>
-                                    <input type="password" name="password" value={this.state.password} onChange={this.handleChange}/></li>
-                                    <label>Роль</label>
-                                <li className="radio"><input type="radio" id="teach" name="role" value="teacher" onChange={this.handleChange} defaultChecked />
-                                    <label htmlFor="teach">Учитель</label>
-                                    <input type="radio"/>
-                                    <label> / </label>
-                                    <input type="radio" id="stud" name="role"  value="student" onChange={this.handleChange}/>
-                                    <label htmlFor="stud">Ученик</label></li>
-                                <li><button type="submit">Войти</button></li>
-                            </ul>
-                        </form>
-                    </div>  
-                    <label> / </label>
-                    <input type="radio" id="signup" name="form" value=""/>
-                    <label htmlFor="signup">Регистрация</label>
-                <div id="reg">
-                    <label>Введите данные</label>
-                    {this.state.loginError}
-                    <form  onSubmit={this.handleSubmit}>
-                        <ul>
-                            <li><label htmlFor="name">Имя</label>
-                                <input type="text" name="name" value={this.state.name} onChange={this.handleChange}/></li> 
-                            <li><label htmlFor="login">Логин</label>
-                                <input type="text" name="login" value={this.state.login} onChange={this.handleChange}/></li>
-                            <li><label htmlFor="password">Пароль</label>
-                                <input type="password" name="password" value={this.state.password} onChange={this.handleChange}/></li>
-                            <li><label htmlFor="school">Школа</label>
-                                <input type="text" name="school" value={this.state.school} onChange={this.handleChange}/></li>
-                                
-                            <li><button type="submit">Зарегистрироваться</button></li>
-                        </ul>
-                    </form>
-                </div>
-            </div>
+			<div>
+				<Head/>
+				<div id="form">
+						<input type="radio" id="signin" name="form" value="" defaultChecked />
+						<label htmlFor="signin">Вход</label>
+						<div id="sign">
+							<label>Введите данные для входа</label>
+							{this.state.status}
+							<form onSubmit={this.handleSubmit}>
+								<ul>
+									<li><label htmlFor="login">Логин</label>
+										<input type="text" name="login" value={this.state.login} onChange={this.handleChange} /></li>
+									<li><label htmlFor="password">Пароль</label>
+										<input type="password" name="password" value={this.state.password} onChange={this.handleChange}/></li>
+										<label>Роль</label>
+									<li className="radio"><input type="radio" id="teach" name="role" value="teacher" onChange={this.handleChange} defaultChecked />
+										<label htmlFor="teach">Учитель</label>
+										<input type="radio"/>
+										<label> / </label>
+										<input type="radio" id="stud" name="role"  value="student" onChange={this.handleChange}/>
+										<label htmlFor="stud">Ученик</label></li>
+									<li><button type="submit">Войти</button></li>
+								</ul>
+							</form>
+						</div>  
+						<label> / </label>
+						<input type="radio" id="signup" name="form" value=""/>
+						<label htmlFor="signup">Регистрация</label>
+					<div id="reg">
+						<label>Введите данные</label>
+						{this.state.status}
+						<form onSubmit={this.handleSubmit}>
+							<ul>
+								<li><label htmlFor="name">Имя</label>
+									<input type="text" name="name" value={this.state.name} onChange={this.handleChange}/></li> 
+								<li><label htmlFor="login">Логин</label>
+									<input type="text" name="login"  autoComplete="off" value={this.state.login} onChange={this.handleChange}/></li>
+								<li><label htmlFor="password">Пароль</label>
+									<input type="password" name="password"  autoComplete="off" value={this.state.password} onChange={this.handleChange}/></li>
+								<li><label htmlFor="school">Школа</label>
+									<input type="text" name="school" value={this.state.school} onChange={this.handleChange}/></li>
+									
+								<li><button type="submit">Зарегистрироваться</button></li>
+							</ul>
+						</form>
+					</div>
+				</div>
+			</div>
 			);
 	}
 }

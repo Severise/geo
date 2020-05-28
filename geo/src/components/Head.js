@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import * as jwt_decode from 'jwt-decode';
-// import history from '../history.js'
+import UserMenu from '../components/UserMenu.js'
 
 export default class Head extends Component {
 	constructor(props) {
@@ -11,12 +11,8 @@ export default class Head extends Component {
 		};
 		var user = localStorage.token ? jwt_decode(localStorage.token) : {};
 		this.state.user = user;
-		this.logout = this.logout.bind(this);
 	}
 
-	logout(props) {
-		localStorage.clear("token");
-	}
 	render() {
 		return (
 			<div id="head">
@@ -28,16 +24,10 @@ export default class Head extends Component {
 				pathname: "/test",
 				state: this.state
 			}}>Тестирование</NavLink></li>
-						<li><NavLink exact to="/login">Вход</NavLink></li>
-						<li><NavLink exact to="/login" onClick={this.logout}>Выход</NavLink></li>
+			 			<li><UserMenu user={this.state.user}/></li>
 					</ul>
 				</div>
 			</div>
 			);
 	}
 }
-// {isLoggedIn ? (
-//        <LogoutButton onClick={this.handleLogoutClick} />
-//      ) : (
-//        <LoginButton onClick={this.handleLoginClick} />
-//      )}

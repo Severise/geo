@@ -1,5 +1,4 @@
 /* 
-
 *::-moz-selection {
 	background-color: #F7FFCD;
 }
@@ -8,13 +7,6 @@
 	background-color: #F7FFCD;
 }
  */
-/* 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-	transition: background-color 5000s ease-in-out 0s;
-} */
 body::-webkit-scrollbar {
 	background-color: rgba(0, 0, 0, 0);
 	width: 0px;
@@ -70,9 +62,7 @@ h2 {
 
 h3 {
 	font-weight: 100;
-	padding-top: 40px;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding: 40px 40px 0;
 	color: #0B4747;
 	font-size: 1.3em;
 	line-height: initial;
@@ -106,6 +96,7 @@ a:active {}
 	position: absolute;
 	top: 0;
 	padding-top: 38px;
+	min-width: 810px
 }
 
 #head *::selection {
@@ -119,13 +110,14 @@ a:active {}
 }
 
 #nav {
-	right: 6.2%;
+	right: 4.5%;
 	position: absolute
 }
 
 #nav ul li {
 	display: inline-block;
 	margin-right: 70px;
+	min-width: 95px;
 }
 
 #nav ul a {
@@ -146,8 +138,7 @@ ul {
 	top: 150px;
 	position: absolute;
 	width: 100%;
-	/* margin-left: 8%; */
-
+	min-width: 810px;
 }
 
 a {
@@ -156,13 +147,11 @@ a {
 
 a:hover {
 	color: #036868;
-
 }
 
 #form>div {
 	width: 100%;
 	position: absolute;
-	/* top: 0 */
 }
 
 #form div:first-child {
@@ -172,10 +161,18 @@ a:hover {
 #body>div:first-child {
 	margin-left: 8%;
 	width: 50%;
+	min-width: 680px;
+}
+
+#body>div>li,
+#body>div:first-child>div,
+#body>div:first-child>table {
+	margin: 20px 40px;
 }
 
 #content {
 	margin-left: 8%;
+	margin-bottom: 50px;
 	float: left;
 	background-color: #C0F8F8;
 	width: 50%;
@@ -199,10 +196,11 @@ a:hover {
 	line-height: 32px;
 }
 
-
 #content #map {
-	overflow: auto;
-	min-height: 760px;
+	overflow: overlay;
+	min-height: 680px;
+	height: 99vh;
+	max-height: 940px;
 	margin: 0;
 	padding: 10px
 }
@@ -223,8 +221,8 @@ a:hover {
 	padding: 20px 30px;
 }
 
-#stud,
-#class {
+#createStud,
+#createClass {
 	display: none;
 }
 
@@ -236,7 +234,40 @@ a.button:focus {
 
 table {
 	border-collapse: collapse;
-	/* font-size: 22px; */
+	width: 88%;
+	display: block;
+}
+
+table * {
+	width: 100%;
+	display: inline-block;
+}
+
+/* 
+#cont{
+	column-count:3;
+    -moz-column-count:3;
+    -webkit-column-count:3;
+} */
+
+tbody {
+	overflow: overlay;
+	max-height: calc(100vh - 370px);
+
+}
+
+
+tbody::-webkit-scrollbar {
+	width: 4px;
+	background-color: transparent
+}
+
+tbody::-webkit-scrollbar-thumb {
+	background-color: #FFCD32;
+}
+
+tbody::-webkit-scrollbar-corner {
+	background-color: transparent
 }
 
 tbody tr:nth-child(n) {
@@ -251,39 +282,36 @@ tr {
 	border-bottom: 1px solid #97113C;
 }
 
-
-td:nth-child(2) {
-	min-width: 90px;
+.password {
+	min-width: 100px;
 }
 
 td[contenteditable="true"] {
 	cursor: pointer;
 }
 
-td:nth-child(1) {
-	min-width: 32px;
+.name {
+	width: calc(25% + 27px);
 }
 
-td:nth-child(4) {
+.class {
 	padding: 0;
 }
 
 td,
 th {
 	font-weight: 100;
-	padding: 6px 12px 6px 20px;
+	padding: 5px 10px 5px 20px;
 	text-align: left;
+	outline: none;
+	width: calc(25% - 50px);
 }
 
 th {
-	padding: 6px 12px 6px 20px;
-	text-align: left;
-
+	/**/
 }
 
-thead tr {
-	/* background-color: #F7FFCD; */
-}
+thead {}
 
 tbody tr:hover {
 	background-color: #FD83AA;
@@ -294,11 +322,10 @@ tbody tr:hover {
 }
 
 #form {
-	margin-left: 38%;
-	margin-right: 38%;
+	margin: auto;
 	width: 24%;
 	position: relative;
-	min-width: 380px;
+	min-width: 300px;
 }
 
 form {
@@ -405,7 +432,6 @@ form button {
 	font-size: 16px;
 }
 
-
 form label,
 li label {
 	display: block;
@@ -425,7 +451,6 @@ li label {
 	font-size: 19px;
 	color: #F5306F;
 }
-
 
 .success {
 	margin-bottom: 18px;
@@ -466,6 +491,13 @@ select {
 	cursor: pointer;
 }
 
+#body>div>div>li {
+	width: 24%;
+	display: inline-block;
+	margin-left: 28px;
+	margin-bottom: 0;
+}
+
 option {
 	width: 110%;
 }
@@ -489,7 +521,6 @@ button {
 a.button {
 	width: calc(36% - 20px);
 	min-width: calc(260px - 20px);
-
 }
 
 a.button:hover,
@@ -507,15 +538,18 @@ table select {
 	-moz-appearance: none;
 	-webkit-appearance: none;
 	height: 100%;
-	font-size: 20px;
+	font-size: 22px;
+	line-height: inherit;
 	border: 0;
 	background-color: transparent;
-	padding: 9px 12px 8px 20px;
+	padding: 5px 10px 5px 20px;
 	cursor: pointer;
+	outline: none;
 }
 
 table option {
 	width: 100%;
+	outline: none;
 }
 
 table select::-ms-expand {
@@ -595,7 +629,6 @@ circle {
 #river [name=angara],
 #river [name="baikal"] {
 	fill: #80F8F8;
-
 }
 
 .active#river [name=angara]:hover,
@@ -617,7 +650,6 @@ circle {
 	-o-transition: all 0.7s ease;
 	transition: all 0.7s ease;
 }
-
 
 .wrong {
 	fill: #F5306F;

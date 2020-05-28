@@ -12,9 +12,11 @@ const PrivateRoute = ({component: Component, ...rest}) => (
 		}
 
 		var user = props.location.state && props.location.state.user ? props.location.state.user : jwt_decode(localStorage.token);
-		props.location.state={user: user};
+		props.location.state = {
+			user: user
+		};
 		if (user.school) {
-			if (props.location.pathname === '/teacher' || props.location.pathname === '/students'|| props.location.pathname === '/results') {
+			if (props.location.pathname === '/teacher' || props.location.pathname === '/students' || props.location.pathname === '/results') {
 				return <Component {...props}/>
 			}
 			return <Redirect to={{
