@@ -660,6 +660,10 @@ path.right:hover {
 	fill: #81F430;
 }
 
+path.wrong:hover {
+	fill: #F5306F;
+}
+
 #river .wrong {
 	stroke: #F5306F;
 }

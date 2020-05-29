@@ -32,7 +32,6 @@ export default class Learn extends Component {
 		var max = 1;
 
 		if (this.state.data.length < 1) {
-			i = -1;
 			this.setState({
 				current: {
 					name: ""
@@ -76,7 +75,6 @@ export default class Learn extends Component {
 			event.target.classList.add('wrong');
 			return;
 		} else {
-			event.target.classList.remove('wrong');
 			event.target.classList.add('right');
 			var a = document.getElementsByClassName("wrong");
 			for (var i = a.length - 1; i >= 0; i--) {
