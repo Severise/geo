@@ -122,9 +122,15 @@ a:active {}
 
 #nav ul a {
 	color: #97113C;
+	padding-bottom: 2px;
 }
 
 #nav ul a:hover {
+	color: #F5306F;
+}
+
+#nav ul li a.current {
+	border-bottom: 2px solid #F5306F;
 	color: #F5306F;
 }
 
@@ -165,9 +171,16 @@ a:hover {
 }
 
 #body>div>li,
-#body>div:first-child>div,
+#body>div:first-child>div {
+	margin: 20px 40px 0px;
+}
+
 #body>div:first-child>table {
-	margin: 20px 40px;
+	margin: 10px 40px 0px;
+}
+
+#body>div:first-child>.success {
+	margin: 0px 40px;
 }
 
 #content {
@@ -202,7 +215,8 @@ a:hover {
 	height: 99vh;
 	max-height: 940px;
 	margin: 0;
-	padding: 10px
+	padding: 10px;
+	outline: none;
 }
 
 #side {
@@ -243,19 +257,10 @@ table * {
 	display: inline-block;
 }
 
-/* 
-#cont{
-	column-count:3;
-    -moz-column-count:3;
-    -webkit-column-count:3;
-} */
-
 tbody {
 	overflow: overlay;
-	max-height: calc(100vh - 370px);
-
+	max-height: calc(100vh - 380px);
 }
-
 
 tbody::-webkit-scrollbar {
 	width: 4px;
@@ -284,6 +289,7 @@ tr {
 
 .password {
 	min-width: 100px;
+	width: calc(51% - 50px);
 }
 
 td[contenteditable="true"] {
@@ -309,9 +315,8 @@ th {
 
 th {
 	/**/
+	color: #F5306F;
 }
-
-thead {}
 
 tbody tr:hover {
 	background-color: #FD83AA;
@@ -453,8 +458,8 @@ li label {
 }
 
 .success {
-	margin-bottom: 18px;
-	font-size: 19px;
+	/* margin-bottom: 18px; */
+	font-size: 18px;
 	color: #036868;
 	display: block;
 }

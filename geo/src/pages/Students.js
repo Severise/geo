@@ -67,6 +67,7 @@ export default class Classes extends Component {
 	}
 
 	handleClick(event) {
+		console.log('cli')
 		this.setState(({
 			status: ''
 		}));
@@ -112,6 +113,7 @@ export default class Classes extends Component {
 	}
 
 	handleChange(event) {
+		console.log('chan')
 		var target = event.target;
 		var value = event.target.value;
 		if (this.state.change.attr && this.state.change.id && this.state.change.valStart !== event.target.value) {
@@ -121,10 +123,10 @@ export default class Classes extends Component {
 				attr: this.state.change.attr
 			})
 				.then(res => {
+					this.setState({
+						status: <div className="success">Значение успешно изменено</div>,
+					});
 					target.value = value;
-					this.setState(({
-						status: <div className="success">Значение успешно изменено</div>
-					}));
 				}).catch(error => {
 				target.innerHTML = this.state.change.valStart;
 				this.setState(({
@@ -135,6 +137,7 @@ export default class Classes extends Component {
 	}
 
 	handleSelect(event) {
+
 		var s
 		if (this.props.location.pathname === '/students') {
 			s = this.state.students.filter(student => student.classId === parseInt(event.target.value) || event.target.value.length === 0);

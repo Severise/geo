@@ -10,33 +10,31 @@ const htmlFiles = getFilesFromDir(PAGE_DIR, [".html"]);
 //     filename: fileName})
 // });
 module.exports = {
-    entry: './src/index.js',
-    module: {
-        rules: [{
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                use: ['babel-loader']
-            },
-            {
-                test: /\.(png|jp(e*)g|svg|gif)$/,
-                use: [{
-                    loader: 'file-loader',
-                    options: {
-                        name: '[hash]-[name].[ext]',
-                    },
-                }, ],
-            },
-        ]
-    },
-    resolve: {
-        extensions: ['*', '.js', '.jsx']
-    },
-    output: {
-        path: __dirname + '/',
-        publicPath: '/',
-        filename: 'bundle.js'
-    },
-    devServer: {
-        contentBase: './'
-    }
+	entry: './src/index.js',
+	module: {
+		rules: [{
+			test: /\.(js|jsx)$/,
+			exclude: /node_modules/,
+			use: ['babel-loader']
+		}, {
+			test: /\.(png|jp(e*)g|svg|gif)$/,
+			use: [{
+				loader: 'file-loader',
+				options: {
+					name: '[hash]-[name].[ext]',
+				},
+			},],
+		},]
+	},
+	resolve: {
+		extensions: ['*', '.js', '.jsx']
+	},
+	output: {
+		path: __dirname + '/',
+		publicPath: '/',
+		filename: 'bundle.js'
+	},
+	devServer: {
+		contentBase: './'
+	}
 };

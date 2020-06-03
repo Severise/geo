@@ -191,7 +191,7 @@ export default class Learn extends Component {
 							<li className="place" onClick={this.handleChoose}>Места</li>
 						</ul>
 						<div>
-							{this.state.current.id == null ? (<div>Выберите слой</div>) : (<div>
+							{this.state.current.id == null ? (<div>Выберите слой для изучения</div>) : (<div>
 							{this.state.test ?
 				(<div>Найдите заданный объект: <br/>
 									<span>{this.state.current.name}</span><br/>

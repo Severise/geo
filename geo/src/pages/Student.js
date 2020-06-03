@@ -19,10 +19,9 @@ export default class Student extends Component {
 						<h3>Функции</h3>
 						TELL THAT ONLY FIRST ATTEMPT WILL COUNT AND FUTHER TRIES ARE USELESS
 						<div>
-							<button className="class" onClick={this.select}>Создать класс</button>
-							<button className="stud" onClick={this.showLast}>Показать последние результаты</button>
+							<button className="stud" onClick={this.showLast}>Показать результаты</button>
 							<Link to={{
-				pathname: '/students',
+				pathname: '/test',
 				state: {
 					user: this.state.user
 				}

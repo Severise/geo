@@ -18,12 +18,12 @@ export default class Head extends Component {
 			<div id="head">
 				<div id="nav">
 					<ul>
-						<li><NavLink exact to="">О сайте</NavLink></li>
-						<li><NavLink exact to="/learn">Обучение</NavLink></li>
+						<li><NavLink exact to="" activeClassName="current">О сайте</NavLink></li>
+						<li><NavLink exact to="/learn" activeClassName="current">Обучение</NavLink></li>
 						<li><NavLink exact to={{
 				pathname: "/test",
 				state: this.state
-			}}>Тестирование</NavLink></li>
+			}} activeClassName="current">Тестирование</NavLink></li>
 			 			<li><UserMenu user={this.state.user}/></li>
 					</ul>
 				</div>

@@ -4,6 +4,7 @@ import list from '../components/list.json';
 import _ from 'lodash';
 import axios from 'axios';
 import Head from '../components/Head.js'
+import svgpan from '../components/svgpan.js'
 
 export default class Learn extends Component {
 	constructor(props) {
@@ -197,7 +198,7 @@ export default class Learn extends Component {
 							<li className="place" onClick={this.handleChoose}>Места</li>
 						</ul>
 						<div>
-							{this.state.current.id == null ? (<div>Выберите слой</div> ) : (<div>Найдите заданный объект: <br/>
+							{this.state.current.id == null ? (<div>Выберите слой для тестирования</div> ) : (<div>Найдите заданный объект: <br/>
 									<span>{this.state.current.name}</span><br/>
 									Попыток: {this.state.current.try}</div>)}
 									{this.state.status}
