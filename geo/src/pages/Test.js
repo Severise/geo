@@ -6,7 +6,6 @@ import axios from 'axios';
 import Head from '../components/Head.js';
 import panzoom from 'panzoom'
 
-
 export default class Learn extends Component {
 	constructor(props) {
 		super(props);

@@ -19,12 +19,11 @@ export default class Classes extends Component {
 			results: [],
 			showResults: []
 		}
-		axios.get(`/classes`)
-			.then(res => {
-				this.setState({
-					classes: res.data
-				});
-			}).catch(error => {
+		axios.get(`/classes`).then(res => {
+			this.setState({
+				classes: res.data
+			});
+		}).catch(error => {
 			console.log(error);
 		});
 
@@ -49,7 +48,6 @@ export default class Classes extends Component {
 					id: this.props.location.state.user.id
 				}
 			}).then(res => {
-				console.log(res.data)
 				this.setState({
 					results: res.data,
 					showResults: res.data
@@ -67,7 +65,6 @@ export default class Classes extends Component {
 	}
 
 	handleClick(event) {
-		console.log('cli')
 		this.setState(({
 			status: ''
 		}));
@@ -97,13 +94,11 @@ export default class Classes extends Component {
 				id: this.state.change.id,
 				value: event.target.innerText,
 				attr: this.state.change.attr
-			})
-				.then(res => {
-					console.log(res);
-					this.setState(({
-						status: <div className="success">Значение успешно изменено</div>
-					}));
-				}).catch(error => {
+			}).then(res => {
+				this.setState(({
+					status: <div className="success">Значение успешно изменено</div>
+				}));
+			}).catch(error => {
 				target.innerHTML = this.state.change.valStart;
 				this.setState(({
 					status: <div className="error">Значение не изменено</div>
@@ -113,7 +108,6 @@ export default class Classes extends Component {
 	}
 
 	handleChange(event) {
-		console.log('chan')
 		var target = event.target;
 		var value = event.target.value;
 		if (this.state.change.attr && this.state.change.id && this.state.change.valStart !== event.target.value) {

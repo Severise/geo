@@ -206,7 +206,7 @@ export default class Learn extends Component {
 							{this.state.test ?
 				(<div>Найдите заданный объект: <br/>
 									<span>{this.state.current.name}</span><br/>
-									Попыток: {this.state.current.try}<br/><br/>
+									Попыток: {this.state.current.try}<br/>
 									После 4 неудачных попыток объект будет показан повторно.</div>) :
 				(<div>Запомните название и расположение: {this.state.current.name}<br/><br/>
 								Для продолжения нажмите на заданное место на карте.</div>)}</div>)}

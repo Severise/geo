@@ -43,6 +43,7 @@ app.post('/signin', (req, res) => {
 	} else {
 		q = "`" + req.body.role + "s`, `classes`  where name = '" + req.body.login + "' and password='" + req.body.password + "' and classes.id=class_id";
 	}
+	console.log("select * from " + q)
 	db.query("select * from " + q, function(err, rows, fields) {
 		if (err) {
 			res.send(err);
@@ -135,7 +136,8 @@ app.get('/students', (req, res) => {
 
 
 app.get('/results', (req, res) => {
-	db.query("select results.id as id, students.name as name, results.type as type, results.result as result, classes.number as number, classes.letter as letter, classes.id as classId from `students`, `classes`, `results` where `teacher_id`=" + req.query.id + " and students.class_id=classes.id and results.student_id=students.id order by id desc limit 8", function(err, rows, fields) {
+	var last = req.query.last ? ' order by id desc limit 6' : ''
+	db.query("select results.id as id, students.name as name, results.type as type, results.result as result, classes.number as number, classes.letter as letter, classes.id as classId from `students`, `classes`, `results` where `teacher_id`=" + req.query.id + " and students.class_id=classes.id and results.student_id=students.id" + last, function(err, rows, fields) {
 		if (err) {
 			res.send(err);
 		} else {
@@ -147,6 +149,26 @@ app.get('/results', (req, res) => {
 					type: rows[i].type,
 					class: rows[i].number + ' ' + rows[i].letter,
 					classId: rows[i].classId,
+					result: rows[i].result
+				})
+			}
+			res.send(results);
+		}
+	});
+});
+
+
+app.get('/studentresults', (req, res) => {
+	db.query("select results.id as id, students.name as name, results.type as type, results.result as result from `students`, `results` where `student_id`=" + req.query.id + " and results.student_id=students.id", function(err, rows, fields) {
+		if (err) {
+			res.send(err);
+		} else {
+			var results = [];
+			for (var i = 0; i < rows.length; i++) {
+				results.push({
+					id: rows[i].id,
+					name: rows[i].name,
+					type: rows[i].type,
 					result: rows[i].result
 				})
 			}
@@ -185,7 +207,7 @@ app.post('/regstudents', (req, res) => {
 });
 
 
-app.post('/createClass', (req, res) => {
+app.post('/createclass', (req, res) => {
 	db.query("insert into classes (`number`, `letter`) values (" + req.body.number + ", '" + req.body.letter + "')", function(err, rows, fields) {
 		if (err) {
 			res.send(err);

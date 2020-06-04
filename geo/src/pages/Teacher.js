@@ -28,61 +28,55 @@ export default class Teacher extends Component {
 	}
 
 	loadClasses() {
-		axios.get(`/classes`)
-			.then(res => {
-				this.setState({
-					classes: res.data
-				});
-			}).catch(error => {
+		axios.get(`/classes`).then(res => {
+			this.setState({
+				classes: res.data
+			});
+		}).catch(error => {
 			console.log(error);
 		});
-
 	}
 
 	handleSubmit(event) {
 		event.preventDefault();
-
 		axios.post(`/regstudents`, {
 			id: this.state.user.id,
 			students: this.state.students,
 			class: this.state.class,
 			classValue: this.state.classValue
-		})
-			.then(res => {
-				this.setState({
-					data: res.data
-				});
-				this.setState({
-					status: 'Добавлено ' + res.data.length + ' учеников:'
-				}, this.show);
-				this.setState({
-					students: '',
-					classValue: '',
-					class: ''
-				});
-
-
-			}).catch(error => {
+		}).then(res => {
+			this.setState({
+				data: res.data
+			});
+			this.setState({
+				status: 'Добавлено ' + res.data.length + ' учеников:'
+			}, this.show);
+			this.setState({
+				students: '',
+				classValue: '',
+				class: ''
+			});
+		}).catch(error => {
 			console.log(error);
 		});
 	}
+
 	handleCreate(event) {
 		event.preventDefault();
-		axios.post(`/createClass`, {
+		axios.post(`/createclass`, {
 			id: this.state.user.id,
 			number: this.state.number,
 			letter: this.state.letter
-		})
-			.then(res => {
-				this.setState({
-					status: 'Создан класс: ' + res.data.number + ' ' + res.data.letter
-				}, this.show);
-				this.setState({
-					letter: '',
-					number: ''
-				}, this.loadClasses);
+		}).then(res => {
+			this.setState({
+				status: 'Создан класс: ' + res.data.number + ' ' + res.data.letter
+			}, this.show);
+			this.setState({
+				letter: '',
+				number: ''
+			}, this.loadClasses);
 
-			}).catch(error => {
+		}).catch(error => {
 			this.setState({
 				status: ''
 			});
@@ -103,25 +97,29 @@ export default class Teacher extends Component {
 			});
 		}
 	}
+
 	showLast(event) {
-		console.log('last')
 		axios.get(`/results`, {
 			params: {
-				id: this.state.user.id
+				id: this.state.user.id,
+				last: true
 			}
 		}).then(res => {
-			console.log(res.data);
 			this.setState({
-				last: res.data
-			});
+				last: res.data,
+				status: 'Последние результаты:',
+				data: []
+			}, this.show);
 		}).catch(error => {
 			console.log(error);
 		});
 	}
+
 	select(event) {
 		this.setState({
 			status: '',
-			data: []
+			data: [],
+			last: []
 		}, this.show(event))
 	}
 
@@ -138,9 +136,19 @@ export default class Teacher extends Component {
 			document.getElementById(w).style.display = "none";
 		} else {
 			document.getElementById("createClass").style.display = "none";
-
 		}
 	}
+
+	print() {
+		var content = document.getElementById("print").outerHTML;
+		var style = '<style type="text/css">th, td {border:1px solid #000; padding: 4px 8px; font-size: 18px;} table{border-collapse: collapse;}</style>';
+		var a = window.open('');
+		a.document.write(content);
+		a.document.write(style);
+		a.document.close();
+		a.print();
+	}
+
 	render() {
 		return (
 			<div>
@@ -151,7 +159,7 @@ export default class Teacher extends Component {
 						<div>
 							<button className="createClass" onClick={this.select}>Создать класс</button>
 							<button className="createStud" onClick={this.select}>Создать учеников</button>
-							<button onClick={this.showLast}>Показать последние результаты</button>
+							<button onClick={this.showLast}>Последние результаты</button>
 							<Link to={{
 				pathname: '/students',
 				state: {
@@ -165,34 +173,33 @@ export default class Teacher extends Component {
 				}
 			}} className="button" user={this.state.user}>Просмотреть результаты</Link>
 						</div>
+			 		</div>
+					<div id="side">
+						<span className="success">{this.state.status}</span>
 						{this.state.last.length > 0 ? (<table>
 								<thead>
 									<tr>
-										<th>name</th>
-										<th>class</th>
-										<th>type</th>
-										<th>result</th>
+										<th className="name">Имя</th>
+										<th className="class">Класс</th>
+										<th>Тип</th>
+										<th className="result">Результат</th>
 									</tr>
 								</thead>
 								<tbody>
 									{this.state.last.map((item) => <tr key={item.id}>
-										<td>{item.name}</td>
-										<td>{item.class}</td>
+										<td className="name">{item.name}</td>
+										<td className="class">{item.class}</td>
 										<td>{item.type}</td>
-										<td>{item.result}</td>
+										<td className="result">{item.result}</td>
 									</tr>)}
 								</tbody>
-							</table>
-				) : ('')}
-			 		</div>
-					<div id="side">
-						<span className="success">{this.state.status}</span>
-						{this.state.data.length > 0 ? (<table>
+							</table>) : ('')}
+						{this.state.data.length > 0 ? (<table  id="print">
 							<thead>
 								<tr>
-									<th className="name">name</th>
-									<th className="password">password</th>
-									<th className="class">class</th>
+									<th className="name">Имя</th>
+									<th className="password">Пароль</th>
+									<th className="class">Класс</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -203,13 +210,14 @@ export default class Teacher extends Component {
 								</tr>)}
 							</tbody>
 						</table>) : ('')}
+						{this.state.data.length > 0 ? (<button onClick={this.print}>Распечатать</button>) : ('')}
 						<form id="createStud" onSubmit={this.handleSubmit}>
 							<ul>
 								<li>
 									<label htmlFor="letter">Класс</label>
 									<select name="class" onChange={this.handleChange} >
 									<option value=""></option>
-										{this.state.classes.map(item => <option key={item.id} >{item.class}</option>)};
+										{this.state.classes.map(item => <option key={item.id}>{item.class}</option>)};
 									</select>
 								</li>
 								<li>

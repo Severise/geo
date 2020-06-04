@@ -1,12 +1,3 @@
-/* 
-*::-moz-selection {
-	background-color: #F7FFCD;
-}
-
-*::selection {
-	background-color: #F7FFCD;
-}
- */
 body::-webkit-scrollbar {
 	background-color: rgba(0, 0, 0, 0);
 	width: 0px;
@@ -36,10 +27,11 @@ body {
 * {
 	margin: 0;
 	padding: 0;
+	font-family: 'Play', sans-serif;
 }
 
 div {
-	line-height: 30px;
+	line-height: 1.5;
 }
 
 h1 {
@@ -75,11 +67,6 @@ h4 {
 	font-size: 1.17em;
 }
 
-/*
-h5 {
-	font-size: 0.7em;
-}
- */
 a {
 	width: min-content;
 	outline: none;
@@ -204,9 +191,9 @@ a:hover {
 #content>div {
 	margin: 20px 40px;
 	margin-top: 26px;
-	height: 300px;
+	min-height: 300px;
 	font-size: 22px;
-	line-height: 32px;
+	line-height: 1.8;
 }
 
 #content #map {
@@ -248,7 +235,6 @@ a.button:focus {
 
 table {
 	border-collapse: collapse;
-	width: 88%;
 	display: block;
 }
 
@@ -257,7 +243,11 @@ table * {
 	display: inline-block;
 }
 
-tbody {
+#side table {
+	margin: 10px 0px 20px;
+}
+
+#body>div:first-child>table tbody {
 	overflow: overlay;
 	max-height: calc(100vh - 380px);
 }
@@ -275,14 +265,6 @@ tbody::-webkit-scrollbar-corner {
 	background-color: transparent
 }
 
-tbody tr:nth-child(n) {
-	/* background-color: #72B1DA; */
-}
-
-tbody tr:nth-child(2n) {
-	/* background-color: #9FC9E5; */
-}
-
 tr {
 	border-bottom: 1px solid #97113C;
 }
@@ -296,12 +278,22 @@ td[contenteditable="true"] {
 	cursor: pointer;
 }
 
-.name {
-	width: calc(25% + 27px);
+.name,
+#results .name {
+	width: calc(25% + 20px);
 }
 
 .class {
 	padding: 0;
+}
+
+.result {
+	width: calc(25% - 27px);
+}
+
+#results td,
+#results th {
+	width: calc(37% - 54px);
 }
 
 td,
@@ -314,7 +306,6 @@ th {
 }
 
 th {
-	/**/
 	color: #F5306F;
 }
 
@@ -458,7 +449,6 @@ li label {
 }
 
 .success {
-	/* margin-bottom: 18px; */
 	font-size: 18px;
 	color: #036868;
 	display: block;
@@ -507,34 +497,41 @@ option {
 	width: 110%;
 }
 
+#content a.button,
+#content button {
+	border: 0px solid #97113C;
+	font-size: 20px;
+	background-color: transparent;
+	text-align: left;
+	width: 42%;
+}
+
+#content a.button {
+	width: calc(42% - 20px);
+}
+
 a.button,
 button {
 	display: block;
 	border: 1px solid #97113C;
-	font-size: 16px;
 	background-color: #fff;
 	text-align: center;
 	cursor: pointer;
 	color: #710527;
-	width: fit-content;
+	width: 100%;
 	line-height: 27px;
-	width: 36%;
-	padding: 9px;
-	min-width: 260px;
+	padding: 10px;
 }
 
-a.button {
-	width: calc(36% - 20px);
-	min-width: calc(260px - 20px);
-}
-
+#content a.button:hover,
+#content button:hover,
 a.button:hover,
 button:hover {
 	background-color: #FDC5D7;
 }
 
-a.button:active,
-button:active {
+#content a.button:active,
+#content button:active {
 	background-color: #C0F8F8;
 }
 
