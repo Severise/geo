@@ -3,8 +3,9 @@ import { ReactComponent as Map } from '../components/Map.svg';
 import list from '../components/list.json';
 import _ from 'lodash';
 import axios from 'axios';
-import Head from '../components/Head.js'
-import svgpan from '../components/svgpan.js'
+import Head from '../components/Head.js';
+import panzoom from 'panzoom'
+
 
 export default class Learn extends Component {
 	constructor(props) {
@@ -25,6 +26,16 @@ export default class Learn extends Component {
 		this.handleChoose = this.handleChoose.bind(this);
 		this.handleStart = this.handleStart.bind(this);
 		this.saveResults = this.saveResults.bind(this);
+	}
+
+	componentDidMount() {
+		panzoom(this.map.current, {
+			smoothScroll: false,
+			bounds: true,
+			boundsPadding: 0.1,
+			maxZoom: 4,
+			minZoom: 0.8
+		});
 	}
 
 	handleStart() {
@@ -187,7 +198,7 @@ export default class Learn extends Component {
 					<div id="content">
 						<h2 onClick={this.saveResults}>Иркутская область</h2>
 						<div id="map">
-							<Map  ref={this.map} onClick={this.handleClick} />
+							<Map id="irkutsk" ref={this.map} onClick={this.handleClick}/>
 						</div>
 					</div>
 					<div id="side">

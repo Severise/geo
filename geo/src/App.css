@@ -289,7 +289,7 @@ tr {
 
 .password {
 	min-width: 100px;
-	width: calc(51% - 50px);
+	width: calc(50% - 62px);
 }
 
 td[contenteditable="true"] {

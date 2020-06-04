@@ -3,22 +3,33 @@ import { ReactComponent as Map } from '../components/Map.svg';
 import list from '../components/list.json';
 import _ from 'lodash';
 import Head from '../components/Head.js'
+import panzoom from 'panzoom'
 
 export default class Learn extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			current: {},
-			data: [],
 			curData: [],
 			curTest: [],
 			status: '',
+			data: [],
 			test: false
 		};
 		this.map = React.createRef();
 		this.handleClick = this.handleClick.bind(this);
 		this.handleChoose = this.handleChoose.bind(this);
 		this.handleStart = this.handleStart.bind(this);
+	}
+
+	componentDidMount() {
+		panzoom(this.map.current, {
+			smoothScroll: false,
+			bounds: true,
+			boundsPadding: 0.1,
+			maxZoom: 4,
+			minZoom: 0.8
+		});
 	}
 
 	startLearn() {

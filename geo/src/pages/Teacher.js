@@ -190,16 +190,16 @@ export default class Teacher extends Component {
 						{this.state.data.length > 0 ? (<table>
 							<thead>
 								<tr>
-									<th>name</th>
-									<th>password</th>
-									<th>class</th>
+									<th className="name">name</th>
+									<th className="password">password</th>
+									<th className="class">class</th>
 								</tr>
 							</thead>
 							<tbody>
 								{this.state.data.map((stud) => <tr key={stud.id}>
-									<td>{stud.name}</td>
-									<td>{stud.password}</td>
-									<td>{stud.class}</td>
+									<td className="name">{stud.name}</td>
+									<td className="password">{stud.password}</td>
+									<td className="class">{stud.class}</td>
 								</tr>)}
 							</tbody>
 						</table>) : ('')}

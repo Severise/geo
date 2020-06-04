@@ -2,13 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import Head from '../components/Head.js'
 
-
 export default class Home extends Component {
-	constructor(props) {
-		super(props);
-		console.log(this)
 
-	}
 	render() {
 		return (
 			<div>

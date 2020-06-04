@@ -15,7 +15,6 @@
     "concurrently": "^5.1.0",
     "express-session": "^1.17.0",
     "mysql": "^2.18.1",
-    "panzoom": "^9.2.4",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "react-router-dom": "^5.1.2"
