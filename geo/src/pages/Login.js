@@ -10,15 +10,30 @@ export default class Sign extends Component {
 			login: "",
 			password: "",
 			role: "teacher",
+			schoolName: "",
 			school: "",
+			newSchool: "",
 			name: "",
 			status: "",
+			schools: []
 		};
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		axios.get(`/schools`).then(res => {
+			this.setState({
+				schools: res.data
+			});
+		}).catch(error => {
+			console.log(error);
+		});
 	}
 
 	handleChange(event) {
+		if (event.target.name === 'school') {
+			this.setState({
+				schoolname: event.target.value
+			});
+		}
 		this.setState({
 			[event.target.name]: event.target.value
 		});
@@ -32,7 +47,6 @@ export default class Sign extends Component {
 				var path = radio[i].id;
 			}
 		}
-
 		if (path === "signin") {
 			axios.post(path, {
 				login: this.state.login,
@@ -66,18 +80,19 @@ export default class Sign extends Component {
 				name: this.state.name,
 				login: this.state.login,
 				password: this.state.password,
-				school: this.state.school
+				school: this.state.school,
+				newSchool: this.state.newSchool
 			}).then(res => {
-				if (res.data.newUser) {
+				if (res.data) {
 					this.setState({
 						status: <div className="success">Success registration</div>
 					});
-
 					this.setState({
 						name: "",
 						login: "",
 						password: "",
 						school: "",
+						newSchool: ""
 					});
 					document.getElementById('signin').checked = true;
 				} else {
@@ -134,9 +149,16 @@ export default class Sign extends Component {
 									<input type="text" name="login"  autoComplete="off" value={this.state.login} onChange={this.handleChange}/></li>
 								<li><label htmlFor="password">Пароль</label>
 									<input type="password" name="password"  autoComplete="off" value={this.state.password} onChange={this.handleChange}/></li>
-								<li><label htmlFor="school">Школа</label>
-									<input type="text" name="school" value={this.state.school} onChange={this.handleChange}/></li>
-									
+								
+								<li>
+									<label htmlFor="school">Школа</label>
+									<select name="school" onChange={this.handleChange} >
+									<option value=""></option>
+										{this.state.schools.map(item => <option key={item.id} value={item.id}>{item.name}</option>)};
+									</select>
+								</li>
+								<li><label htmlFor="newSchool">Новая школа</label>
+									<input type="text" name="newSchool" value={this.state.newSchool} placeholder='Создайте новую если вашей нет в списке' onChange={this.handleChange}/></li>
 								<li><button type="submit">Зарегистрироваться</button></li>
 							</ul>
 						</form>

@@ -44,9 +44,7 @@ h1 {
 
 h2 {
 	font-weight: 100;
-	padding-top: 40px;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding: 40px 40px 0;
 	font-size: 1.8em;
 	line-height: initial;
 	color: #0B4747;
@@ -449,6 +447,7 @@ li label {
 }
 
 .success {
+	margin-bottom: 18px;
 	font-size: 18px;
 	color: #036868;
 	display: block;
@@ -589,6 +588,13 @@ label::selection {
 	background-color: #FFCD32;
 }
 
+path {
+	fill: #FFF1C6;
+	stroke: #FFCD32;
+	stroke-width: 0.7;
+	stroke-opacity: 1
+}
+
 .active path:hover {
 	stroke-width: 1.5;
 	fill: #80F8F8;
@@ -597,13 +603,6 @@ label::selection {
 	-ms-transition: all 0.7s ease;
 	-o-transition: all 0.7s ease;
 	transition: all 0.7s ease;
-}
-
-path {
-	fill: #FFF1C6;
-	stroke: #FFCD32;
-	stroke-width: 0.7;
-	stroke-opacity: 1
 }
 
 .active path,
@@ -628,16 +627,14 @@ circle {
 	transition: all 0.7s ease;
 }
 
-#river [name=angara],
-#river [name="baikal"] {
-	fill: #80F8F8;
+#river .fill {
+	fill: #C0F8F8;
 }
 
-.active#river [name=angara]:hover,
-.active#river [name="baikal"]:hover {}
+.active#river .fill:hover {}
 
 circle {
-	r: 7px;
+	r: 6px;
 	opacity: 1;
 	fill: #FFCD32;
 	stroke-width: 0.2
@@ -645,7 +642,8 @@ circle {
 
 .active circle:hover {
 	stroke-width: 0.2;
-	r: 12px;
+	r: 18px;
+	fill: #2BDBDB;
 	-webkit-transition: all 0.7s ease;
 	-moz-transition: all 0.7s ease;
 	-ms-transition: all 0.7s ease;
@@ -653,17 +651,16 @@ circle {
 	transition: all 0.7s ease;
 }
 
-.wrong {
+.wrong,
+path.wrong:hover,
+circle.wrong:hover {
 	fill: #F5306F;
 }
 
 .right,
-path.right:hover {
+path.right:hover,
+circle.right:hover {
 	fill: #81F430;
-}
-
-path.wrong:hover {
-	fill: #F5306F;
 }
 
 #river .wrong {
@@ -673,9 +670,4 @@ path.wrong:hover {
 #river .right {
 	stroke: #81F430;
 	stroke-width: 1.4;
-}
-
-#results ul li {
-	border: 0px;
-	margin: 10px 0;
 }

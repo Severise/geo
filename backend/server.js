@@ -1,25 +1,18 @@
-const express = require('express');
-const session = require('express-session');
-const jwt = require('jsonwebtoken')
-
-const cors = require('cors');
+const generatePassword = require('password-generator');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
+const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const md5 = require('md5');
 
-const app = express();
-app.use(cors());
-var generatePassword = require('password-generator');
-
 const router = express.Router();
-const API_PORT = 3001;
+const app = express();
 
 app.use(express.json());
-app.use(session({
-	secret: 'geography',
-	resave: true,
-	saveUninitialized: true
-}));
+app.use(cors());
+
+const API_PORT = 3001;
 
 const mysql = require('mysql');
 const db = mysql.createConnection({
@@ -39,12 +32,12 @@ app.use(morgan('dev'));
 app.post('/signin', (req, res) => {
 	var q;
 	if (req.body.role === 'teacher') {
-		q = "`" + req.body.role + "s` where login = '" + req.body.login + "' and password='" + md5(req.body.password) + "'";
+		q = "select teachers.id as id, teachers.name as name, teachers.login as login, schools.name as school from `teachers`, `schools` where login = '" + req.body.login + "' and password='" + md5(req.body.password) + "' and schools.id=teachers.school_id";
 	} else {
-		q = "`" + req.body.role + "s`, `classes`  where name = '" + req.body.login + "' and password='" + req.body.password + "' and classes.id=class_id";
+		q = "select students.id as id, students.name as name, classes.number as number, classes.letter as letter, students.class_id as class_id from `students`, `classes`  where name = '" + req.body.login + "' and password='" + req.body.password + "' and classes.id=class_id";
 	}
-	console.log("select * from " + q)
-	db.query("select * from " + q, function(err, rows, fields) {
+	// console.log(q)
+	db.query(q, function(err, rows, fields) {
 		if (err) {
 			res.send(err);
 		} else if (!rows[0]) {
@@ -73,19 +66,41 @@ app.post('/signup', (req, res) => {
 		if (error) {
 			res.send(error);
 		} else {
-			if (rowss.length > 1) {
-				db.query("insert into teachers (`name`, `login`, `password`, `school`) values ('" + req.body.name + "', '" + req.body.login + "', '" + md5(req.body.password) + "', '" + req.body.school + "')", function(err, rows, fields) {
-					if (err) {
-						res.send(err);
-					} else {
-						var newUser = {
-							name: req.body.name,
-							login: req.body.login,
-							school: req.body.school
-						};
-						res.send(newUser);
-					}
-				});
+			if (rowss.length < 1) {
+				if (req.body.school) {
+					db.query("insert into teachers (`name`, `login`, `password`, `school_id`) values ('" + req.body.name + "', '" + req.body.login + "', '" + md5(req.body.password) + "', '" + req.body.school + "')", function(err, rows, fields) {
+						if (err) {
+							res.send(err);
+						} else {
+							var newUser = {
+								name: req.body.name,
+								login: req.body.login,
+								school: req.body.school
+							};
+							res.send(newUser);
+						}
+					});
+				} else {
+					db.query("insert into schools (`name`) values ('" + req.body.newSchool + "')", function(err, rowss, fieldss) {
+						if (err) {
+							res.send(err);
+						} else {
+							var schoolId = rowss.insertId;
+							db.query("insert into teachers (`name`, `login`, `password`, `school_id`) values ('" + req.body.name + "', '" + req.body.login + "', '" + md5(req.body.password) + "', '" + schoolId + "')", function(errr, rows, fields) {
+								if (errr) {
+									res.send(errr);
+								} else {
+									var newUser = {
+										name: req.body.name,
+										login: req.body.login,
+										school: schoolId
+									};
+									res.send(newUser);
+								}
+							});
+						}
+					});
+				}
 			} else {
 				res.status(304).send({
 					'error': "User already exists"
@@ -109,6 +124,24 @@ app.get('/classes', (req, res) => {
 				})
 			}
 			res.send(classes);
+		}
+	});
+});
+
+
+app.get('/schools', (req, res) => {
+	db.query("select * from `schools`", function(err, rows, fields) {
+		if (err) {
+			res.send(err);
+		} else {
+			var schools = [];
+			for (var i = 0; i < rows.length; i++) {
+				schools.push({
+					id: rows[i].id,
+					name: rows[i].name
+				})
+			}
+			res.send(schools);
 		}
 	});
 });
@@ -195,7 +228,7 @@ app.post('/regstudents', (req, res) => {
 			class: req.body.classValue
 		});
 		q += '("' + studs[i] + '", "' + pass + '",' + req.body.id + ', "' + req.body.class + '" ),';
-	// q += '("' + studs[i] + '", "' + md5(pass) + '",' + session.id + ', "' + req.body.class + '" ),';
+	// q += '("' + studs[i] + '", "' + md5(pass) + '",' + req.body.id + ', "' + req.body.class + '" ),';
 	}
 	db.query("insert into students (`name`, `password`, `teacher_id`, `class_id`) values " + q.slice(0, -1), function(err, rows, fields) {
 		if (err) {
