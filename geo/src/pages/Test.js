@@ -165,7 +165,10 @@ export default class Learn extends Component {
 	}
 
 	saveResults() {
-		if (!this.state.user.id) {
+		if (!this.state.user.id || !this.state.user.className) {
+			this.setState({
+				status: <div>Вы набрали {this.state.results.sum}%</div>
+			});
 			return;
 		}
 		axios.post('saveresults', {
