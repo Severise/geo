@@ -36,13 +36,13 @@ export default class Student extends Component {
 						<h3>{this.state.user.name} {this.state.user.class}</h3>
 						<div>
 							<Link to={{
-				pathname: '/learn',
+				pathname: "/learn",
 				state: {
 					user: this.state.user
 				}
 			}} className="button" user={this.state.user}>Пройти обучение</Link>
 			<Link to={{
-				pathname: '/test',
+				pathname: "/test",
 				state: {
 					user: this.state.user
 				}

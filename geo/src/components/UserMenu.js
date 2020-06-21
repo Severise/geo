@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
 
 function logout(props) {
-	localStorage.clear("token");
+	localStorage.clear('token');
 }
 
 export default withRouter(function UserMenu(props) {

@@ -50,19 +50,19 @@ export default class Learn extends Component {
 				id: this.state.curData[i].id,
 				name: this.state.curData[i].name
 			}
-		}, () => document.getElementById(this.state.current.id).classList.add("right"));
+		}, () => document.getElementById(this.state.current.id).classList.add('right'));
 		this.state.curData.splice(i, 1);
 	}
 
 	handleStart() {
-		var a = document.getElementsByClassName("right");
+		var a = document.getElementsByClassName('right');
 		for (var i = a.length - 1; i >= 0; i--) {
 			a[i].classList.remove('right');
 		}
 		if (this.state.data.length < 1) {
 			this.setState({
 				current: {
-					name: ""
+					name: ''
 				}
 			});
 			return;
@@ -99,15 +99,15 @@ export default class Learn extends Component {
 	}
 
 	handleClick(event) {
-		var layer = event.target.parentElement.getAttribute("id");
+		var layer = event.target.parentElement.getAttribute('id');
 		if (!this.state.current.id) {
 			return
 		}
-		if (layer !== document.getElementsByClassName("chosen")[0].getAttribute("class").split(" ")[0]) {
+		if (layer !== document.getElementsByClassName('chosen')[0].getAttribute('class').split(' ')[0]) {
 			return;
 		}
 		if (!this.state.test) {
-			if (parseInt(event.target.getAttribute("id")) === this.state.current.id) {
+			if (parseInt(event.target.getAttribute('id')) === this.state.current.id) {
 				event.target.classList.remove('right');
 				if (this.state.curData.length > 0) {
 					this.startLearn();
@@ -118,12 +118,12 @@ export default class Learn extends Component {
 				}
 			}
 		} else {
-			var a = document.getElementsByClassName("wrong");
+			var a = document.getElementsByClassName('wrong');
 			for (var i = a.length - 1; i >= 0; i--) {
 				a[i].classList.remove('wrong');
 			}
-			if (parseInt(event.target.getAttribute("id")) !== this.state.current.id) {
-				if (!event.target.classList.contains("right")) {
+			if (parseInt(event.target.getAttribute('id')) !== this.state.current.id) {
+				if (!event.target.classList.contains('right')) {
 					this.setState({
 						current: {
 							id: this.state.current.id,
@@ -145,7 +145,7 @@ export default class Learn extends Component {
 			this.setState({
 				data: [this.state.current].concat(this.state.data)
 			}, () => {
-				var a = document.getElementsByClassName("wrong");
+				var a = document.getElementsByClassName('wrong');
 				for (var i = a.length - 1; i >= 0; i--) {
 					a[i].classList.remove('wrong');
 				}
@@ -158,24 +158,24 @@ export default class Learn extends Component {
 	handleChoose(event) {
 		var cur = event.target.className;
 		var prev;
-		if (document.getElementsByClassName("chosen")[0]) {
-			prev = document.getElementsByClassName("chosen")[0];
-			if (event.target.classList.contains(prev.getAttribute("class").split(" ")[0])) {
+		if (document.getElementsByClassName('chosen')[0]) {
+			prev = document.getElementsByClassName('chosen')[0];
+			if (event.target.classList.contains(prev.getAttribute('class').split(' ')[0])) {
 				return;
 			}
-			var b = document.getElementsByClassName("right");
+			var b = document.getElementsByClassName('right');
 			for (var j = b.length - 1; j >= 0; j--) {
 				b[j].classList.remove('right');
 			}
-			prev.classList.remove("chosen");
-			prev = prev.getAttribute("class").split(" ")[0];
-			document.getElementById(prev).style.display = "none";
+			prev.classList.remove('chosen');
+			prev = prev.getAttribute('class').split(' ')[0];
+			document.getElementById(prev).style.display = 'none';
 		}
-		document.getElementById("region").style.display = "inline";
-		document.getElementById(cur).style.display = "inline";
-		document.getElementsByTagName("svg")[0].getElementsByClassName("active")[0].classList.remove("active");
-		document.getElementsByTagName("svg")[0].getElementById(cur).classList.add("active");
-		event.target.classList.add("chosen");
+		document.getElementById('region').style.display = 'inline';
+		document.getElementById(cur).style.display = 'inline';
+		document.getElementsByTagName('svg')[0].getElementsByClassName('active')[0].classList.remove('active');
+		document.getElementsByTagName('svg')[0].getElementById(cur).classList.add('active');
+		event.target.classList.add('chosen');
 		var clone = _.cloneDeep(list);
 		clone = clone[cur];
 		this.setState({

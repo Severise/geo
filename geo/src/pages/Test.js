@@ -45,7 +45,7 @@ export default class Learn extends Component {
 		if (this.state.data.length < 1) {
 			this.setState({
 				current: {
-					name: ""
+					name: ''
 				}
 			}, this.count);
 		} else {
@@ -69,12 +69,12 @@ export default class Learn extends Component {
 		if (!this.state.current.id) {
 			return
 		}
-		var layer = event.target.parentElement.getAttribute("id");
-		if (layer !== document.getElementsByClassName("chosen")[0].getAttribute("class").split(" ")[0]) {
+		var layer = event.target.parentElement.getAttribute('id');
+		if (layer !== document.getElementsByClassName('chosen')[0].getAttribute('class').split(' ')[0]) {
 			return;
 		}
-		if (parseInt(event.target.getAttribute("id")) !== this.state.current.id) {
-			if (!event.target.classList.contains("right")) {
+		if (parseInt(event.target.getAttribute('id')) !== this.state.current.id) {
+			if (!event.target.classList.contains('right')) {
 				this.setState({
 					current: {
 						id: this.state.current.id,
@@ -87,11 +87,11 @@ export default class Learn extends Component {
 			return;
 		} else {
 			event.target.classList.add('right');
-			var a = document.getElementsByClassName("wrong");
+			var a = document.getElementsByClassName('wrong');
 			for (var i = a.length - 1; i >= 0; i--) {
 				a[i].classList.remove('wrong');
 			}
-			var name = document.getElementsByClassName("chosen")[0].getAttribute("class").split(" ")[0];
+			var name = document.getElementsByClassName('chosen')[0].getAttribute('class').split(' ')[0];
 			this.setState({
 				results: {
 					name: name,
@@ -115,28 +115,28 @@ export default class Learn extends Component {
 				sum: 0
 			}
 		})
-		if (document.getElementsByClassName("chosen")[0]) {
-			prev = document.getElementsByClassName("chosen")[0];
-			if (event.target.classList.contains(prev.getAttribute("class").split(" ")[0])) {
+		if (document.getElementsByClassName('chosen')[0]) {
+			prev = document.getElementsByClassName('chosen')[0];
+			if (event.target.classList.contains(prev.getAttribute('class').split(' ')[0])) {
 				return;
 			}
-			prev.classList.remove("chosen");
-			prev = prev.getAttribute("class").split(" ")[0];
-			var a = document.getElementsByClassName("wrong");
-			var b = document.getElementsByClassName("right");
+			prev.classList.remove('chosen');
+			prev = prev.getAttribute('class').split(' ')[0];
+			var a = document.getElementsByClassName('wrong');
+			var b = document.getElementsByClassName('right');
 			for (var i = a.length - 1; i >= 0; i--) {
 				a[i].classList.remove('wrong');
 			}
 			for (var j = b.length - 1; j >= 0; j--) {
 				b[j].classList.remove('right');
 			}
-			document.getElementById(prev).style.display = "none";
+			document.getElementById(prev).style.display = 'none';
 		}
-		document.getElementById("region").style.display = "inline";
-		document.getElementById(cur).style.display = "inline";
-		document.getElementsByTagName("svg")[0].getElementsByClassName("active")[0].classList.remove("active");
-		document.getElementsByTagName("svg")[0].getElementById(cur).classList.add("active");
-		event.target.classList.add("chosen");
+		document.getElementById('region').style.display = 'inline';
+		document.getElementById(cur).style.display = 'inline';
+		document.getElementsByTagName('svg')[0].getElementsByClassName('active')[0].classList.remove('active');
+		document.getElementsByTagName('svg')[0].getElementById(cur).classList.add('active');
+		event.target.classList.add('chosen');
 		var clone = _.cloneDeep(list);
 		clone = clone[cur];
 		this.setState({

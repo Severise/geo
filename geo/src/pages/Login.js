@@ -7,14 +7,14 @@ export default class Sign extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			login: "",
-			password: "",
-			role: "teacher",
-			schoolName: "",
-			school: "",
-			newSchool: "",
-			name: "",
-			status: "",
+			login: '',
+			password: '',
+			role: 'teacher',
+			schoolName: '',
+			school: '',
+			newSchool: '',
+			name: '',
+			status: '',
 			schools: []
 		};
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -47,7 +47,7 @@ export default class Sign extends Component {
 				var path = radio[i].id;
 			}
 		}
-		if (path === "signin") {
+		if (path === 'signin') {
 			axios.post(path, {
 				login: this.state.login,
 				password: this.state.password,
@@ -72,7 +72,7 @@ export default class Sign extends Component {
 				}
 			}).catch(error => {
 				this.setState({
-					status: <div className="error">User not found</div>
+					status: <div className="error">Пользователь не найден</div>
 				});
 			});
 		} else {
@@ -85,14 +85,14 @@ export default class Sign extends Component {
 			}).then(res => {
 				if (res.data) {
 					this.setState({
-						status: <div className="success">Success registration</div>
+						status: <div className="success">Регистрация пройдена</div>
 					});
 					this.setState({
-						name: "",
-						login: "",
-						password: "",
-						school: "",
-						newSchool: ""
+						name: '',
+						login: '',
+						password: '',
+						school: '',
+						newSchool: ''
 					});
 					document.getElementById('signin').checked = true;
 				} else {
@@ -101,8 +101,11 @@ export default class Sign extends Component {
 					});
 				}
 			}).catch(error => {
+				if (error.response.status == 304) {
+					return;
+				}
 				this.setState({
-					status: <div className="error">Registration error</div>
+					status: <div className="error">Ошибка регистрации</div>
 				});
 			});
 		}
@@ -158,7 +161,7 @@ export default class Sign extends Component {
 									</select>
 								</li>
 								<li><label htmlFor="newSchool">Новая школа</label>
-									<input type="text" name="newSchool" value={this.state.newSchool} placeholder='Создайте новую если вашей нет в списке' onChange={this.handleChange}/></li>
+									<input type="text" name="newSchool" value={this.state.newSchool} placeholder="Создайте новую если вашей нет в списке" onChange={this.handleChange}/></li>
 								<li><button type="submit">Зарегистрироваться</button></li>
 							</ul>
 						</form>

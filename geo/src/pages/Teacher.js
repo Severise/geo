@@ -88,7 +88,7 @@ export default class Teacher extends Component {
 		this.setState({
 			[event.target.name]: event.target.value
 		});
-		if (event.target.getAttribute('name') === "class") {
+		if (event.target.getAttribute('name') === 'class') {
 			this.setState({
 				[event.target.name]: event.target.options[event.target.selectedIndex].value
 			});
@@ -125,22 +125,22 @@ export default class Teacher extends Component {
 
 	show(event) {
 		if (!event) {
-			document.getElementById("createStud").style.display = "none";
-			document.getElementById("createClass").style.display = "none";
+			document.getElementById('createStud').style.display = 'none';
+			document.getElementById('createClass').style.display = 'none';
 			return;
 		}
 		var x = document.getElementById(event.target.className);
-		var w = event.target.className === "createClass" ? "createStud" : "createClass";
-		if (x.style.display === "none" || x.style.display === "") {
-			x.style.display = "block";
-			document.getElementById(w).style.display = "none";
+		var w = event.target.className === 'createClass' ? 'createStud' : 'createClass';
+		if (x.style.display === 'none' || x.style.display === '') {
+			x.style.display = 'block';
+			document.getElementById(w).style.display = 'none';
 		} else {
-			document.getElementById("createClass").style.display = "none";
+			document.getElementById('createClass').style.display = 'none';
 		}
 	}
 
 	print() {
-		var content = document.getElementById("print").outerHTML;
+		var content = document.getElementById('print').outerHTML;
 		var style = '<style type="text/css">th, td {border:1px solid #000; padding: 4px 8px; font-size: 18px;} table{border-collapse: collapse;}</style>';
 		var a = window.open('');
 		a.document.write(content);
@@ -161,13 +161,13 @@ export default class Teacher extends Component {
 							<button className="createStud" onClick={this.select}>Создать учеников</button>
 							<button onClick={this.showLast}>Последние результаты</button>
 							<Link to={{
-				pathname: '/students',
+				pathname: "/students",
 				state: {
 					user: this.state.user
 				}
 			}} className="button" user={this.state.user}>Просмотреть классы</Link>
 							<Link to={{
-				pathname: '/results',
+				pathname: "/results",
 				state: {
 					user: this.state.user
 				}

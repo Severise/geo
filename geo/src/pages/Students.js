@@ -68,7 +68,7 @@ export default class Classes extends Component {
 		this.setState(({
 			status: ''
 		}));
-		if (event.target.className === "class") {
+		if (event.target.className === 'class') {
 			this.setState({
 				change: {
 					id: event.target.parentElement.parentElement.id,
